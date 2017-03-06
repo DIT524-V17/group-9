@@ -41,19 +41,19 @@ TEST_F(SmartcarObstacleStopFixture, obstacleDetectedMinimum_stop) {
 	loop();
 }
 
-// Check that the car stops when the distance is less than 15cm
+// Check that the car stops when the distance is less than 20cm
 TEST_F(SmartcarObstacleStopFixture, obstacleDetected_stop) {
 	EXPECT_CALL(*SR04_mock, getDistance())
-	.WillOnce(Return(7));
+	.WillOnce(Return(14));
 	EXPECT_CALL(*carMock, setSpeed(0));
 	loop();
 }
 
-// Check that the car continues moving when the distance is exactly 15cm
+// Check that the car continues moving when the distance is exactly 20cm
 TEST_F(SmartcarObstacleStopFixture, obstacleDetected_go) {
 	EXPECT_CALL(*SR04_mock, getDistance())
-	.WillOnce(Return(15));
-	EXPECT_CALL(*carMock, setSpeed(50));
+	.WillOnce(Return(20));
+	EXPECT_CALL(*carMock, setSpeed(40));
 	loop();
 }
 

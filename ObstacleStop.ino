@@ -1,8 +1,8 @@
 #include <Smartcar.h>
 
 SR04 sensor;
-const int TRIGGER_PIN = 3;
-const int ECHO_PIN = 4;
+const int TRIGGER_PIN = 6;
+const int ECHO_PIN = 5;
 unsigned int tempSpeed;
 Car car;
 
@@ -13,14 +13,15 @@ void setup() {
 
 void loop() {
   unsigned int distance = sensor.getDistance();
-  // the car will maintain speed 50 until
+  // since initially, the speed is set to 40,
+  // the car will maintain that speed until
   // it encounters an obstacle
-    if (distance && distance < 15){
+    if (distance && distance < 20){
         // obstacle encountered, speed is set to 0
         tempSpeed = 0;
     } 
     else {
-        tempSpeed = 50;
-      }
-      car.setSpeed(tempSpeed); 
+        tempSpeed = 40;
+    }
+      car.setSpeed(tempSpeed);
 }
