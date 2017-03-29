@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">MobileApplication</string>
-    <string name="title_activity_control">Control</string>
+    <string name="app_name">Car Controller</string>
 </resources>
