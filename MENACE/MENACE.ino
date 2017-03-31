@@ -18,6 +18,7 @@ const int ledLeft =  49;      // the number of the LED pin
 //Variables used
 char data = 0;                // for the bluetooth connection
 unsigned int tempSpeed = 0;   // for setting the velocity
+char input;                   // holds the input from the app
 int ledState = LOW;           // led state used to set the LED
 const long interval = 100;           // interval to blink (milliseconds)
 unsigned long previousMillisL = 0;   // to store last time LED at the left side was updated
@@ -25,9 +26,10 @@ unsigned long previousMillisR = 0;   // to store last time LED at the right side
 
 
 void setup() {
-sensor.attach(TRIGGER_PIN_F, ECHO_PIN_F);
+sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
 //sensor.attach(TRIGGER_PIN_B, ECHO_PIN_B);
 Serial.begin(9600);
+//Serial.setTimeout(200);
 gyro.attach();
 encoder.attach(encoderPin);
 car.begin(gyro);
@@ -141,7 +143,9 @@ void goBack(int tempSpeed) {      //Method to make the car go backwards for a li
    }
 }
 
-boolean ObstacleFront(){               // Method to identify if there is an obstacle or not in front of the car - Not tested after small changes
+// Method to identify if there is an obstacle or not in front of the car - Not tested after small changes
+
+boolean ObstacleFront(){               
   unsigned int distance = sensorFront.getDistance();
   if (distance > 0 && distance < 20){
     return true; 
@@ -151,63 +155,64 @@ boolean ObstacleFront(){               // Method to identify if there is an obst
   }
 }
 
-boolean ObstacleBack(){               // Method to identify if there is an obstacle or not in the back of the car - not tested
-  unsigned int distance = sensorBack.getDistance();
-  if (distance > 0 && distance < 20){
-    return true; 
-  }
-  else {
-    return false;
-  }
-}
+// Method to identify if there is an obstacle or not in the back of the car - not tested
+
+//boolean ObstacleBack(){               
+//  unsigned int distance = sensorBack.getDistance();
+ // if (distance > 0 && distance < 20){
+ //   return true; 
+//  }
+ // else {
+  //  return false;
+ // }
+//}
 
 void loop() {
   
 if(Serial.available() > 0){  // Send data only when you receive data:
   data = Serial.read();
-
   switch (input){ //Needs the input from the App - to be done
   
-    case 'Auto': //The case where the user selects the car to be autonomous
+    case 'A': //The case where the user selects the car to be AUTONOMOUS
     
       switch (input){   //Needs the input from the App - to be done
-        case 'start':   //If the start button on the autonomous mode is selected
+        case 'S':   //If the START button on the autonomous mode is selected
       
           //moveCar(30); // This gives problem together with the other methods, but alone works fine
-          if(Obstacle()){
+          if(ObstacleFront()){
 
             blinkAlert();
             goBack(50); //Do not change this number for lower - does not run the car
             turnRight();  
           } 
           break;
-        case 'stop':  //If the stop button on the autonomous mode is selected
+        case 'P':  //If the STOP button on the autonomous mode is selected
            stopCar();
            break;
-        case 'manual': //If the manual button on the autonomous "page" is selected
+        case 'M': //If the MANUAL button on the autonomous "page" is selected
             //to be done
             break;
       }
-    case 'Manual': // To be done 
-      switch (input){   //Needs the input from the App - to be done
-        case 'Forward':
+    case 'M': // To be done; MANUAL
+      switch (input){    // Needs the input from the App - to be done
+        case 'F':       // FORWARD
           moveCar(30); 
-        case 'Backward':
+        case 'B':       // BACKWARD 
           goBack(50);
-        case 'Left':
+        case 'L':      // LEFT
           turnLeft();
-        case 'Right':
+        case 'R':      // RIGHT
           turnRight();
-        case 'Stop': 
+        case 'P':      // STOP
           stopCar();
-        case 'Alert':
+        case 'E':     // ALERT
           blinkAlert();
         //case 'Auto': //Needs to be done
             
               
   //  case 'Follow': // To be done
     
+    }
+  }
 }
 }
-}
-
