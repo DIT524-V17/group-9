@@ -170,14 +170,14 @@ if(Serial.available() > 0){  // Send data only when you receive data:
   
     case 'Auto': //The case where the user selects the car to be autonomous
     
-      switch (input){ //Needs the input from the App - to be done
-        case 'start': //If the start button on the autonomous mode is selected
+      switch (input){   //Needs the input from the App - to be done
+        case 'start':   //If the start button on the autonomous mode is selected
       
           //moveCar(30); // This gives problem together with the other methods, but alone works fine
           if(Obstacle()){
 
             blinkAlert();
-            goBack(50);
+            goBack(50); //Do not change this number for lower - does not run the car
             turnRight();  
           } 
           break;
@@ -189,8 +189,23 @@ if(Serial.available() > 0){  // Send data only when you receive data:
             break;
       }
     case 'Manual': // To be done 
-
-    case 'Follow': // To be done
+      switch (input){   //Needs the input from the App - to be done
+        case 'Forward':
+          moveCar(30); 
+        case 'Backward':
+          goBack(50);
+        case 'Left':
+          turnLeft();
+        case 'Right':
+          turnRight();
+        case 'Stop': 
+          stopCar();
+        case 'Alert':
+          blinkAlert();
+        //case 'Auto': //Needs to be done
+            
+              
+  //  case 'Follow': // To be done
     
 }
 }
