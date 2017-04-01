@@ -10,30 +10,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.group9.carcontroller.ControlActivity"
     android:background="@drawable/googra">
+
    <Button
+       android:id="@+id/test"
+       style="@style/CustomButtonText"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:text="Test Action"
-       android:id="@+id/test"
        android:background="@drawable/custom_btn_blue"
-       style="@style/CustomButtonText"
+       android:text="Start"
        android:layout_alignParentTop="true"
-       android:layout_centerHorizontal="true" />
+       android:layout_alignStart="@+id/stop1"
+       android:layout_marginTop="44dp" />
 
    <Button
        android:id="@+id/stop1"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_alignEnd="@+id/test"
+       android:layout_marginTop="122dp"
+       android:background="@drawable/custom_btn_blue"
+       android:text="Stop"
+       android:textColor="@android:color/white"
+       android:textStyle="bold"
        android:layout_below="@+id/test"
-       android:layout_marginTop="56dp"
-       android:text="Stop" />
+       android:layout_centerHorizontal="true" />
 
    <Button
        android:id="@+id/manual1"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:background="@drawable/custom_btn_blue"
+       android:text="Manual"
+       android:textColor="@android:color/white"
+       android:textStyle="bold"
+       android:layout_below="@+id/stop1"
        android:layout_alignStart="@+id/stop1"
-       android:layout_centerVertical="true"
-       android:text="Manual" />
+       android:layout_marginTop="132dp" />
 </RelativeLayout>

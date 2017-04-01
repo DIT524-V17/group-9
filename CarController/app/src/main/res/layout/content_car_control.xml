@@ -12,8 +12,10 @@
         android:id="@+id/forward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forward"
         android:background="@drawable/custom_btn_blue"
+        android:text="Forward"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="62dp" />
 
@@ -21,8 +23,10 @@
         android:id="@+id/left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Left"
         android:background="@drawable/custom_btn_blue"
+        android:text="Left"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="40dp"
         tools:layout_editor_absoluteY="181dp" />
 
@@ -30,8 +34,10 @@
         android:id="@+id/right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Right"
         android:background="@drawable/custom_btn_blue"
+        android:text="Right"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="242dp"
         tools:layout_editor_absoluteY="164dp" />
 
@@ -39,8 +45,10 @@
         android:id="@+id/backwards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Backwards"
         android:background="@drawable/custom_btn_blue"
+        android:text="Backwards"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="266dp" />
 
@@ -48,8 +56,10 @@
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stop"
         android:background="@drawable/custom_btn_blue"
+        android:text="Stop"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="445dp" />
 
@@ -57,8 +67,10 @@
         android:id="@+id/alert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alert"
         android:background="@drawable/custom_btn_blue"
+        android:text="Alert"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="160dp"
         tools:layout_editor_absoluteY="445dp" />
 
@@ -66,8 +78,10 @@
         android:id="@+id/automatic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Automatic"
         android:background="@drawable/custom_btn_blue"
+        android:text="Automatic"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="278dp"
         tools:layout_editor_absoluteY="445dp" />
 </android.support.constraint.ConstraintLayout>
