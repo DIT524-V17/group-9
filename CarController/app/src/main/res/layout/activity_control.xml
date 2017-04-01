@@ -16,7 +16,9 @@
        android:text="Test Action"
        android:id="@+id/test"
        android:background="@drawable/custom_btn_blue"
-       style="@style/CustomButtonText"/>
+       style="@style/CustomButtonText"
+       android:layout_alignParentTop="true"
+       android:layout_centerHorizontal="true" />
 
    <Button
        android:id="@+id/stop1"

@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forward"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="62dp" />
 
@@ -21,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Left"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="40dp"
         tools:layout_editor_absoluteY="181dp" />
 
@@ -29,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Right"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="242dp"
         tools:layout_editor_absoluteY="164dp" />
 
@@ -37,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Backwards"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="266dp" />
 
@@ -45,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="445dp" />
 
@@ -53,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alert"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="160dp"
         tools:layout_editor_absoluteY="445dp" />
 
@@ -61,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Automatic"
+        android:background="@drawable/custom_btn_blue"
         tools:layout_editor_absoluteX="278dp"
         tools:layout_editor_absoluteY="445dp" />
 </android.support.constraint.ConstraintLayout>
