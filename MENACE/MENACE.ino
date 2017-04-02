@@ -132,7 +132,7 @@ void stopCar(){       //Method to make the car stop
 }
 
 void goBack(int tempSpeed) {      //Method to make the car go backwards for a limited distance
-                                  //Maybe jsut for the autonomous mode
+                                  //Maybe just for the autonomous mode
   unsigned int distanceOd = encoder.getDistance();  //Geting the odometer distance not the sensor
    tempSpeed = tempSpeed;
    car.setSpeed(-(tempSpeed));
@@ -141,7 +141,7 @@ void goBack(int tempSpeed) {      //Method to make the car go backwards for a li
    }
 }
 void goBackM(int tempSpeed) {      //Method to make the car go backwards for a limited distance
-                                  //Maybe jsut for the autonomous mode
+                                  //Maybe just for the autonomous mode
  unsigned int distanceOd = sensorBack.getDistance();  //Geting the odometer distance not the sensor
    tempSpeed = tempSpeed;
    car.setSpeed(-(tempSpeed));
@@ -173,62 +173,61 @@ boolean ObstacleBack(){               // Method to identify if there is an obsta
 
 void loop() {
   
-if(Serial.available() > 0){  // Send data only when you receive data:
-  input = Serial.read();
-
-  switch (input){ 
-  // case 'Auto' from the control and from the mode
-    case 'A': //The case where the user selects the car to be autonomous
-    
-      switch (input){   
-        case 'S':   //If the start button on the autonomous mode is selected
-      
-          //moveCar(30); // This gives problem together with the other methods, but alone works fine
-          if(ObstacleFront()){
-
-            blinkAlert();
-            goBack(50); //Do not change this number for lower - does not run the car
-            
-            if(ObstacleBack()){
+  if(Serial.available() > 0){  // Send data only when you receive data:
+    input = Serial.read();
+  
+    switch (input){
+       
+        //case Auto from the control and from the mode    
+          case 'S':   //If the start button on the autonomous mode is selected
+        
+            //moveCar(30); // This gives problem together with the other methods, but alone works fine
+            if(ObstacleFront()){
+  
               blinkAlert();
-              turnLeft();
-            }
-            turnRight();  
-          } 
-          break;
-        case 'B':  //If the stop button on the autonomous mode is selected
-           stopCar();
-           break;
- 
-      }
-      //If the manual button is selected on both UI
-    case 'M': 
-      switch (input){   
-        case 'f':
-          moveCar(30); 
-          break;
-        case 'b':
-          goBackM(50);
-          break;
-        case 'l':
-          turnLeft();
-          break;
-        case 'r':
-          turnRight();
-          break;
-        case 's': 
-          stopCar();
-          break;
-        case 'a':
-          blinkAlert();
-          break;
-               
+              goBack(50); //Do not change this number for lower - does not run the car
               
-    //case 'F': // To be done
-    
-      }
-      }
+              if(ObstacleBack()){
+                blinkAlert();
+                turnLeft();
+              }
+              turnRight();  
+            } 
+            break;
+            
+          case 'B':  //If the stop button on the autonomous mode is selected
+             stopCar();
+             break;
 
-}
+        //case Manual    
+          case 'f':
+            moveCar(30); 
+            break;
+            
+          case 'b':
+            goBackM(50);
+            break;
+
+          case 'l':
+            turnLeft();
+            break;
+          
+          case 'r':
+            turnRight();
+            break;
+          
+          case 's': 
+            stopCar();
+            break;
+          
+          case 'a':
+            blinkAlert();
+            break;
+
+        //case 'F': // To be done
+       }
+       
+  }
+
 }
 
