@@ -213,7 +213,7 @@ void loop() {
 
       //case Manual
       case 'f':
-        moveCar(30);
+        moveCarM(50);
         break;
 
       case 'b':
