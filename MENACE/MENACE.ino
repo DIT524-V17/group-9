@@ -27,7 +27,7 @@ unsigned long previousMillisR = 0;   // to store last time LED at the right side
 void setup() {
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
-  Serial.begin(9600);
+  Serial3.begin(9600);
   gyro.attach();
   encoder.attach(encoderPin);
   car.begin(gyro);
@@ -192,8 +192,9 @@ void blinkOff() {
 
 void loop() {
 
-  if (Serial.available() > 0) { // Send data only when you receive data:
-    input = Serial.read();
+  if (Serial3.available() > 0) { // Send data only when you receive data:
+    input = Serial3.read();
+    Serial.print("received " + input);
 
     switch (input) {
 
