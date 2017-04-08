@@ -152,28 +152,28 @@ void turnLeft() {       //Method to make the car turn left + blink the left ligh
 }
 
 void moveCar(int tempSpeedL, int tempSpeedR) { //Method to make the car move given a speed
-  car.setMotorSpeed(tempSpeedR,tempSpeedL);
+  car.setMotorSpeed(tempSpeedR, tempSpeedL);
 }
 
 void moveCarM(int tempSpeedL, int tempSpeedR) { //Method to make the car move given a speed for a certain distance
-  car.setMotorSpeed(tempSpeedR,tempSpeedL);
+  car.setMotorSpeed(tempSpeedR, tempSpeedL);
   //car.go(40); //this method cames from his library and it is supposed to make the car run for X cm
-  
-  while(isMoving()){       //here we need a loop to keep checking the distance when the method is called in order to stop the car
-    checkDistanceL();
-   if (distanceEnL == 40){
-  stopCar();
-    }
-  }
-  //it is needed a distance checker
 
+  //while(isMoving()){       //here we need a loop to keep checking the distance when the method is called in order to stop the car
+  //checkDistanceL();
+  //if (distanceEnL == 40){
+  //stopCar();
 }
+//}
+//it is needed a distance checker
+
+//}
 void stopCar() {      //Method to make the car stop
   car.stop();
 }
 
 void goBack(int tempSpeedL, int tempSpeedR) {      //Method to make the car go backwards for a limited distance
-  car.setMotorSpeed(-(tempSpeedR),-(tempSpeedL));
+  car.setMotorSpeed(-(tempSpeedR), -(tempSpeedL));
 
   //it is needed a distance checker for 20 cm
 }
@@ -225,29 +225,29 @@ boolean isMoving() {
 
 }
 
-void goAuto() { //Not working properly - the car jsut move 
-    if (ObstacleFront()) { //we need to make the car check all the times, not just in the begining
-      Obstacle();
-      turnRight();
-    }
-    moveCar(30, 30);
+void goAuto() { //Not working properly - the car jsut move
+  if (ObstacleFront()) { //we need to make the car check all the times, not just in the begining
+    Obstacle();
+    turnRight();
   }
+  moveCar(30, 30);
+}
 
-void goManual() { 
-  if (input == 'q') { 
+void goManual() {
+  if (input == 'q') {
     stopCar();
   }
   if (input == 'f') {
     //if(ObstacleFront()){  //we need a check obstacles - if not we can make a scenario to fit this
-      //stopCar();
-      //promptUser();
+    //stopCar();
+    //promptUser();
     //}
     moveCarM(30, 30);
   }
   if (input == 'b') {
-   // while (ObstacleBack()) { //we need a check obstacles - if not we can make a scenario to fit this
-      //stopCar();
-      //promptUser();
+    // while (ObstacleBack()) { //we need a check obstacles - if not we can make a scenario to fit this
+    //stopCar();
+    //promptUser();
     //}
     goBack(30, 30);
   }
@@ -262,8 +262,8 @@ void goManual() {
   }
 }
 
-String promptUser(){ //method to prompt the user for a new direction
-  
+String promptUser() { //method to prompt the user for a new direction
+
 }
 
 
