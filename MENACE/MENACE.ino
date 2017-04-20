@@ -6,7 +6,7 @@ Gyroscope gyro(6);
 Odometer encoderLeft;
 Odometer encoderRight;
 Car car;
-// test//
+
 //Pin numbers
 const int encoderPinL = 2; // the number of the left odometers pin
 const int encoderPinR = 3; // the number of the right odometers pin
@@ -76,7 +76,7 @@ void loop() {
       turnRight();
     }
 
-    moveCar(50, 50); // <-- Car is always moving unless the autonmous mode is off
+    moveCar(40, 40); // <-- Car is always moving unless the autonmous mode is off
     stopped = false; // <-- Ignore the stopped state in autonmous mode
    
      checkSerialInput();
@@ -231,7 +231,7 @@ boolean Obstacle() {
 /* Checks the front sensor readings for obstacles */
 boolean ObstacleFront() { 
   distanceObF = sensorFront.getDistance();
-  if (distanceObF > 0 && distanceObF < 25) {
+  if (distanceObF > 0 && distanceObF < 30) {
     blinkAlert();   // <-- Make the lights blink 
     stopCar();      // <-- Stop the car
     blinkOff();     // <-- Stop blinking
@@ -243,7 +243,7 @@ boolean ObstacleFront() {
 /* Checks the back sensor readings for obstacles <-- Check the previous function */
 boolean ObstacleBack() { 
     distanceObB = sensorBack.getDistance();
-    if (distanceObB > 0 && distanceObB < 25) {
+    if (distanceObB > 0 && distanceObB < 30) {
       blinkAlert();
       stopCar();
       blinkOff();
@@ -292,14 +292,14 @@ void goManual() {
     stopped = false;
     // Perform an obstacle check before driving
     if (canDriveForward) {    
-      moveCarM(50, 50);
+      moveCarM(45, 45);
     }
   } 
   
   if (input == 'b') {     // <---- Drive backwards
     stopped = false;
     if (canDriveBackward) {
-      goBack(50, 50);
+      goBack(45, 45);
     }
   }
   if (input == 'l') {     // <---- Turn left (its acctualy driving left because it moves then stop :P)
