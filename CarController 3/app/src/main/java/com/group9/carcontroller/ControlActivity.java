@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class ControlActivity extends AppCompatActivity {
-
+// test git
     //Define buttons
     Button btnUp,btnDown,btnStop,btnLeft,btnRight,btnBlink;
     ToggleButton autonomousSwich;
