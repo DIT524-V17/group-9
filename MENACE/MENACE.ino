@@ -35,12 +35,11 @@ unsigned int distanceObF = 0;
 unsigned int distanceObB = 0;
 boolean goAuto1 = false;
 
-boolean stopped = false; // indecates if the car is stopped
 boolean canDriveForward = true;
 boolean canDriveBackward = true;
 
 void setup() {
-  Serial3.begin(9600);
+  Serial.begin(9600);
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
   gyro.attach();
@@ -59,43 +58,48 @@ void setup() {
 
 /*===============================================
                     STATE
- ===============================================
- */
+  ===============================================
+*/
 void loop() {
 
   currentMillis = millis();
-  
+
   checkSerialInput(); // <---- Get input from blutooth
- 
+
   modeSelection();    // <---- Get autonmous mode change (Also from bluetooth)
 
   /* Enter this section when in autonomous mode */
   if (goAuto1 == true) {
-    
-    if (ObstacleFront()) { //< -- Always check for obstacle and act accordingly 
+
+    if (ObstacleFront()) { //< -- Always check for obstacle and act accordingly
       turnRight();
     }
 
     moveCar(40, 40); // <-- Car is always moving unless the autonmous mode is off
-    stopped = false; // <-- Ignore the stopped state in autonmous mode
-   
-     checkSerialInput();
+    //    stopped = false; // <-- Ignore the stopped state in autonmous mode
+
+    checkSerialInput();
   } else {
-    
+
     /* Enter this section when in manual mode */
     // The car proccess the commands from user but stops incase of obstacle
-   
-    Obstacle(); // <----- check allways 
+
+    ObstacleF(); // <----- check allways
+    ObstacleB();
+    Serial.print('b');
+    Serial.println(canDriveBackward);
+    Serial.print('f');
+    Serial.println(canDriveForward);
   }
 
 }
 
 /*===============================================
                     LIGHTS
- ===============================================
- */
+  ===============================================
+*/
 
- /* Method to turnOn the right light */
+/* Method to turnOn the right light */
 void blinkRight() {
 
   if (ledStateRight == LOW) {
@@ -114,7 +118,7 @@ void blinkRight() {
 
 
 /* Method to turnOn the left light */
-void blinkLeft() { 
+void blinkLeft() {
 
   if (ledStateLeft == LOW) {
     if (currentMillis - previousMillisL >= intervalLeft) {
@@ -131,7 +135,7 @@ void blinkLeft() {
 }
 
 /* Method to turn Off both lights */
-void blinkOff() { 
+void blinkOff() {
   ledStateLeft = LOW;
   ledStateRight = LOW;
   digitalWrite(ledLeft, ledStateLeft);
@@ -139,18 +143,18 @@ void blinkOff() {
 }
 
 /* Method to make both lights blink 4 times */
-void blinkAlert() { 
-    blinkLeft();
-    blinkRight();
-  }
-  
-  /*===============================================
-                      TURNS
-   ===============================================
-   */
+void blinkAlert() {
+  blinkLeft();
+  blinkRight();
+}
+
+/*===============================================
+                    TURNS
+  ===============================================
+*/
 
 /* Method to make the car turn right + blink the right light */
-void turnRight() { 
+void turnRight() {
   blinkRight(); //First blink
   car.rotate(55); //Rotate
   blinkOff();
@@ -159,7 +163,7 @@ void turnRight() {
 }
 
 /* Method to make the car turn right + blink the right light */
-void turnRightM() { 
+void turnRightM() {
 
   blinkRight(); //First blink
   car.rotate(55); //Rotate
@@ -170,69 +174,76 @@ void turnRightM() {
 }
 
 /* Method to make the car turn left + blink the left light */
-void turnLeftM() { 
+void turnLeftM() {
 
-    blinkLeft(); //First blink
-    car.rotate(-55); //Rotate
-    blinkOff();
-    delay(1000);
-    stopCar();
+  blinkLeft(); //First blink
+  car.rotate(-55); //Rotate
+  blinkOff();
+  delay(1000);
+  stopCar();
 
-  }
-  /*===============================================
-                      MOVEMENT
-   ===============================================
-   */
+}
+/*===============================================
+                    MOVEMENT
+  ===============================================
+*/
 
-   /* Method to make the car move given a speed */
-void moveCar(int tempSpeedL, int tempSpeedR) { 
+/* Method to make the car move given a speed */
+void moveCar(int tempSpeedL, int tempSpeedR) {
+
   car.setMotorSpeed(tempSpeedR, tempSpeedL);
 }
 
 /* Method to make the car move given a speed for a certain distance */
-void moveCarM(int tempSpeedL, int tempSpeedR) { 
+void moveCarM(int tempSpeedL, int tempSpeedR) {
   car.setMotorSpeed(tempSpeedR, tempSpeedL);
 }
 
 /* Method to make the car stop */
-void stopCar() { 
-  car.stop(); 
-  stopped = true;   // <-- Set the stopped state to true
+void stopCar() {
+  car.stop();
+  //  stopped = true;   // <-- Set the stopped state to true
   input = 0;      // <-- Dont listen to blutooth input anymore
   delay(100);     // < -- The API documentation requires a 100 ms delay (Thats what i understood :P )
 }
 
 /* Method to make the car go backwards for a limited distance */
-void goBack(int tempSpeedL, int tempSpeedR) { 
-    car.setMotorSpeed(-(tempSpeedR), -(tempSpeedL));  //<-- Just set the speed but in reverse
-  }
-  /*===============================================
-                      OBSTACLES
-   ===============================================
-   */
- 
- /* Check for both front and back obstacles */
-boolean Obstacle() {
-  
-  // No need to check if its allready stooped
-  if (ObstacleFront() && !stopped) { 
-    canDriveForward = false;  // < -- If there is an obstacle infront of the car, allow to drive backwards
-    canDriveBackward = true;
-    return true;
-  } else if (ObstacleBack() && !stopped) {
-    canDriveBackward = false; // <-- Just in like the previouse case but for the back sensor
-    canDriveForward = true;
-    return true;
-  }
+void goBack(int tempSpeedL, int tempSpeedR) {
+  car.setMotorSpeed(-(tempSpeedR), -(tempSpeedL));  //<-- Just set the speed but in reverse
+}
+/*===============================================
+                    OBSTACLES
+  ===============================================
+*/
 
-  return false;
+/* Check for both front and back obstacles */
+void ObstacleF() {
+
+  // No need to check if its allready stooped
+  if (ObstacleFront()) {
+    canDriveForward = false;  // < -- If there is an obstacle infront of the car, allow to drive backwards
+
+  } else {
+    canDriveForward = true;  // < -- If there is an obstacle infront of the car, allow to drive backwards
+
+  }
+}
+
+/* Check for both front and back obstacles */
+void ObstacleB() {
+  if (ObstacleBack()) {
+    canDriveBackward = false; // <-- Just in like the previouse case but for the back sensor
+
+  } else {
+    canDriveBackward = true; // <-- Just in like the previouse case but for the back sensor
+  }
 }
 
 /* Checks the front sensor readings for obstacles */
-boolean ObstacleFront() { 
+boolean ObstacleFront() {
   distanceObF = sensorFront.getDistance();
   if (distanceObF > 0 && distanceObF < 30) {
-    blinkAlert();   // <-- Make the lights blink 
+    blinkAlert();   // <-- Make the lights blink
     stopCar();      // <-- Stop the car
     blinkOff();     // <-- Stop blinking
     return true;
@@ -241,22 +252,22 @@ boolean ObstacleFront() {
 }
 
 /* Checks the back sensor readings for obstacles <-- Check the previous function */
-boolean ObstacleBack() { 
-    distanceObB = sensorBack.getDistance();
-    if (distanceObB > 0 && distanceObB < 30) {
-      blinkAlert();
-      stopCar();
-      blinkOff();
-      return true;
-    }
-    return false;
+boolean ObstacleBack() {
+  distanceObB = sensorBack.getDistance();
+  if (distanceObB > 0 && distanceObB < 30) {
+    blinkAlert();
+    stopCar();
+    blinkOff();
+    return true;
   }
-  /*===============================================
-                      DISTANCE
-   ===============================================
-   */
+  return false;
+}
+/*===============================================
+                    DISTANCE
+  ===============================================
+*/
 
-  /* Checks the distance readings (NOT USED ANYMORE) */
+/* Checks the distance readings (NOT USED ANYMORE) */
 int checkDistanceL() {
   distanceEnL = encoderLeft.getDistance();
   return distanceEnL;
@@ -278,8 +289,8 @@ boolean isMoving() {
 
 /*===============================================
                     MANUAL CONTROL
- ===============================================
- */
+  ===============================================
+*/
 
 /* Proccess the input from the bluetooth */
 void goManual() {
@@ -287,17 +298,15 @@ void goManual() {
   if (input == 'q') {       // <---- Stop
     stopCar();
   }
-  
+
   if (input == 'f') {       // <----  Drive forwards
-    stopped = false;
     // Perform an obstacle check before driving
-    if (canDriveForward) {    
+    if (canDriveForward) {
       moveCarM(45, 45);
     }
-  } 
-  
+  }
+
   if (input == 'b') {     // <---- Drive backwards
-    stopped = false;
     if (canDriveBackward) {
       goBack(45, 45);
     }
@@ -315,33 +324,36 @@ void goManual() {
 
 /*===============================================
                     MODE SELECTION
- ===============================================
- */
+  ===============================================
+*/
 
- /* Proccess the blutooth input for autonmous mode switcing */
+/* Proccess the blutooth input for autonmous mode switcing */
 void modeSelection() {
   switch (input) {
-  case 'a':         // <---- Robots will invade us :D
-    goAuto1 = true;
-    break;
-  case 's':         // <---- STATIC no movement (Toggles the autonmous mode off)
-    stopCar();
-    goAuto1 = false;
-    break;
-
-  default:
-    goManual();
+    case 'a':         // <---- Robots will invade us :D
+      goAuto1 = true;
+      break;
+    case 's':         // <---- STATIC no movement (Toggles the autonmous mode off)
+      stopCar();
+      goAuto1 = false;
+      break;
+    case 'r':
+      blinkAlert();
+    case 'w':
+      blinkOff();
+    default:
+      goManual();
 
   }
 }
 
 /*===============================================
                     BLUETOOTH
- ===============================================
- */
+  ===============================================
+*/
 void checkSerialInput() {
-  if (Serial3.available() > 0) { // <---- Get data only when bluetooth available:
-    input = Serial3.read();
+  if (Serial.available() > 0) { // <---- Get data only when bluetooth available:
+    input = Serial.read();
   }
 }
 
