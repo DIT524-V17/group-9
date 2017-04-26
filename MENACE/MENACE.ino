@@ -39,7 +39,7 @@ boolean canDriveForward = true;
 boolean canDriveBackward = true;
 
 void setup() {
-  Serial.begin(9600);
+  Serial3.begin(9600);
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
   gyro.attach();
@@ -352,8 +352,8 @@ void modeSelection() {
   ===============================================
 */
 void checkSerialInput() {
-  if (Serial.available() > 0) { // <---- Get data only when bluetooth available:
-    input = Serial.read();
+  if (Serial3.available() > 0) { // <---- Get data only when bluetooth available:
+    input = Serial3.read();
   }
 }
 
