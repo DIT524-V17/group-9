@@ -344,3 +344,9 @@ void checkSerialInput() {
     input = Serial3.read();
   }
 }
+
+void readSerial() {
+  if (Serial.available() > 0) { // <---- Get data only when bluetooth available:
+    input = Serial.read();
+  }
+  }
