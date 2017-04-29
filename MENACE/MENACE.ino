@@ -39,7 +39,7 @@ boolean canDriveForward = true;
 boolean canDriveBackward = true;
 
 void setup() {
-  Serial3.begin(9600);
+  Serial.begin(9600);
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
   gyro.attach();
@@ -75,17 +75,17 @@ void loop() {
       turnRight();
     }
 
-    moveCar(45, 45); // <-- Car is always moving unless the autonmous mode is off
+    moveCar(70, 70); // <-- Car is always moving unless the autonmous mode is off
 
     checkSerialInput();
-    
+
   } else {
-  
+
     /* Enter this section when in manual mode */
     // The car proccess the commands from user but stops incase of obstacle
-
+    delay(1000);
     ObstacleF(); // <----- check allways
- 
+
     ObstacleB();
     //Serial.print('b');
     //Serial.println(canDriveBackward);
@@ -224,13 +224,13 @@ void ObstacleF() {
 
 /* Check for back obstacles */
 void ObstacleB() {
-  
+
   if (ObstacleBack()) {
     canDriveBackward = false; // < -- If there is an obstacle in the back of the car, don't allow the car to moves backward
 
   } else {
     canDriveBackward = true; // < -- If there isn't an obstacle in the back of the car, allow the car to moves backward
-    
+
   }
 }
 
@@ -273,14 +273,14 @@ void goManual() {
   if (input == 'f') {       // <----  Drive forwards
     // Perform an obstacle check before driving
     if (canDriveForward) {
-      moveCar(45, 45);
+      moveCar(70, 70);
     }
   }
 
   if (input == 'b') {     // <---- Drive backwards
-      // Perform an obstacle check before driving
+    // Perform an obstacle check before driving
     if (canDriveBackward) {
-      goBack(45, 45);
+      goBack(70, 70);
     }
   }
   if (input == 'l') {     // <---- Turn left (its acctualy driving left because it moves then stop :P)
@@ -309,7 +309,7 @@ void modeSelection() {
       stopCar();
       goAuto1 = false;
       break;
-    case 'o':         // <---- Blink the alert lights if an red object is faced 
+    case 'o':         // <---- Blink the alert lights if an red object is faced
       blinkAlert();
       break;
     case 'w':         // <---- Stopping blink the alert lights if an red object is gone
@@ -326,8 +326,8 @@ void modeSelection() {
   ===============================================
 */
 void checkSerialInput() {
-  if (Serial3.available() > 0) { // <---- Get data only when bluetooth available:
-    input = Serial3.read();
+  if (Serial.available() > 0) { // <---- Get data only when bluetooth available:
+    input = Serial.read();
   }
 }
 
