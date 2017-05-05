@@ -7,4 +7,4 @@ ser = serial.Serial('/dev/ttyACM0', 9600)
 
 while 1:
     ser.write('3')
-	time.sleep(5)
+    time.sleep(5)
