@@ -1,5 +1,19 @@
+/**
+ * This sketch was created to control the robot car, initialize the serials attached on the car as the raspberry pi, sensors and bluetooth module.
+ * There are data exchange between the pi and the mobile application (Andriod code). 
+ * 
+ * @author - Nina (Version 1), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
+ * @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
+ * @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
+ * 
+**/
+
 #include<Smartcar.h>
 
+/*===============================================
+              Hardware initialization
+  ===============================================
+*/
 SR04 sensorFront;
 SR04 sensorBack;
 Gyroscope gyro(6);
@@ -7,38 +21,44 @@ Odometer encoderLeft;
 Odometer encoderRight;
 Car car;
 
-//Pin numbers
-const int encoderPinL = 2; // the number of the left odometers pin
-const int encoderPinR = 3; // the number of the right odometers pin
-const int TRIGGER_PIN_F = 51; // the number of the ultrasound sensor pin for the front
-const int ECHO_PIN_F = 50; // the number of the ultrasound sensor pin for the front
-const int TRIGGER_PIN_B = 45; // the number of the ultrasound sensor pin for the back
-const int ECHO_PIN_B = 44; // the number of the ultrasound sensor pin for the back
-const int ledRight = 48; // the number of the LED pin
-const int ledLeft = 49; // the number of the LED pin
+/*===============================================
+            Pin numbers initialization
+  ===============================================
+*/
+const int encoderPinL = 2; // <---- the number of the left odometers pin
+const int encoderPinR = 3; // <---- the number of the right odometers pin
+const int TRIGGER_PIN_F = 51; // <---- the number of the ultrasound sensor pin for the front
+const int ECHO_PIN_F = 50; // <---- the number of the ultrasound sensor pin for the front
+const int TRIGGER_PIN_B = 45; // <---- the number of the ultrasound sensor pin for the back
+const int ECHO_PIN_B = 44; // <---- the number of the ultrasound sensor pin for the back
+const int ledRight = 48; // <---- the number of the LED pin
+const int ledLeft = 49; // <---- the number of the LED pin
 
-//Variables used
-char input = 0; // for the bluetooth connection
-char output = 0; // for the bluetooth connection
-unsigned int tempSpeed = 0; // for setting the velocity
-int ledStateLeft = LOW; // led state used to set the LED
-int ledStateRight = LOW; // led state used to set the LED
-const long intervalLeft = 1000; // interval to blink (milliseconds)
-const long intervalRight = 1000; // interval to blink (milliseconds)
-const int blinkDuration = 500; // number of millisecs that Led's are on - all three leds use this
-unsigned long currentMillis = 0; // stores the value of millis() in each iteration of loop()
-unsigned long previousMillisL = 0; // to store last time LED at the left side was updated
-unsigned long previousMillisR = 0; // to store last time LED at the right side was updated
-unsigned int distanceEnL = 0;
-unsigned int distanceEnR = 0;
-unsigned int distanceOb = 0;
-unsigned int distanceObF = 0;
-unsigned int distanceObB = 0;
-boolean goAuto1 = false;
+/*===============================================
+            Variables initialization
+  ===============================================
+*/
+char input = 0; // <---- for the bluetooth connection
+char output = 0; // <---- for the bluetooth connection
+unsigned int tempSpeed = 0; // <---- for setting the velocity
+int ledStateLeft = LOW; // <---- led state used to set the LED
+int ledStateRight = LOW; // <---- led state used to set the LED
+const long intervalLeft = 1000; // <---- interval to blink (milliseconds)
+const long intervalRight = 1000; // <---- interval to blink (milliseconds)
+const int blinkDuration = 500; // <---- number of millisecs that Led's are on - all three leds use this
+unsigned long currentMillis = 0; // <---- stores the value of millis() in each iteration of loop()
+unsigned long previousMillisL = 0; // <---- to store last time LED at the left side was updated
+unsigned long previousMillisR = 0; // <---- to store last time LED at the right side was updated
+unsigned int distanceObF = 0; // <---- 
+unsigned int distanceObB = 0; // <---- 
+boolean goAuto1 = false; // <---- 
+boolean canDriveForward = true; // <---- to make sure the car is allowed to go forward
+boolean canDriveBackward = true; // <---- 
 
-boolean canDriveForward = true;
-boolean canDriveBackward = true;
-
+/*===============================================
+                    SETUP
+  ===============================================
+*/
 void setup() {
   Serial3.begin(9600);
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
@@ -318,12 +338,12 @@ void modeSelection() {
       stopCar();
       goAuto1 = false;
       break;
-    case 'o':         // <---- Blink the alert lights if an red object is faced
-      blinkAlert();
-      break;
-    case 'w':         // <---- Stopping blink the alert lights if an red object is gone
-      blinkOff();
-      break;
+//    case 'o':         // <---- Blink the alert lights if an red object is faced
+//      blinkAlert();
+//      break;
+//    case 'w':         // <---- Stopping blink the alert lights if an red object is gone
+//      blinkOff();
+//      break;
     default:
       goManual();
 
@@ -335,13 +355,17 @@ void modeSelection() {
   ===============================================
 */
 void checkSerialInput() {
-  if (Serial3.available() > 0) { // <---- Get data only when bluetooth available:
+  if (Serial3.available() > 0) { // <---- Get data only when bluetooth available
     input = Serial3.read();
   }
 }
 
+/*===============================================
+                PI CONNECTION
+  ===============================================
+*/
 void readSerial() {
-  if (Serial.available() > 0) { // <---- Get data only when bluetooth available:
+  if (Serial.available() > 0) { // <---- Get data only when Serial port is available
     input = Serial.read();
   }
 }
