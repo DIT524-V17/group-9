@@ -19,6 +19,7 @@ const int ledLeft = 49; // the number of the LED pin
 
 //Variables used
 char input = 0; // for the bluetooth connection
+char output = 0; // for the bluetooth connection
 unsigned int tempSpeed = 0; // for setting the velocity
 int ledStateLeft = LOW; // led state used to set the LED
 int ledStateRight = LOW; // led state used to set the LED
@@ -240,6 +241,10 @@ boolean ObstacleFront() {
   if (distanceObF > 0 && distanceObF < 30) {
     blinkAlert();   // <-- Make the lights blink
     stopCar();      // <-- Stop the car
+
+    output = 'r';
+    Serial3.println(output);
+    
     blinkOff();     // <-- Stop blinking
     return true;
   }
@@ -252,6 +257,10 @@ boolean ObstacleBack() {
   if (distanceObB > 0 && distanceObB < 30) {
     blinkAlert();   // <-- Make the lights blink
     stopCar();      // <-- Stop the car
+
+    output = 't';
+    Serial3.println(output);
+    
     blinkOff();     // <-- Stop blinking
     return true;
   }
