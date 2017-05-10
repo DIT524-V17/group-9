@@ -170,4 +170,14 @@
 
    </LinearLayout>
 
+    <Button
+        android:id="@+id/joystick"
+        style="@style/CustomButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_btn_blue"
+        android:text="Joystick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

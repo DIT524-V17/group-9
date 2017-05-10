@@ -30,7 +30,7 @@ import java.util.UUID;
 public class ControlActivity extends AppCompatActivity {
 
     //Define buttons
-    Button btnBlink;
+    Button btnBlink, btnJoystick;
     ImageButton btnUp, btnDown, btnStop, btnLeft, btnRight;
     ToggleButton autonomousSwich, lightSwitch;
 
@@ -106,7 +106,7 @@ public class ControlActivity extends AppCompatActivity {
             btnRight = (ImageButton) findViewById(R.id.right);
             btnStop = (ImageButton) findViewById(R.id.stop);
             btnBlink = (Button) findViewById(R.id.blink);
-
+            btnJoystick = (Button) findViewById(R.id.joystick);
 
             autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
             lightSwitch = (ToggleButton) findViewById(R.id.light);
@@ -237,6 +237,18 @@ public class ControlActivity extends AppCompatActivity {
                     setAction("j");
                 }
             });
+
+            btnJoystick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ControlActivity.this, JoystickScreen.class);
+                    i.putExtra("ADDRESS", address);
+                    startActivity(i);
+                    Disconnect();
+                    finish();
+                }
+            });
+            
 
             autonomousSwich.setOnClickListener(new View.OnClickListener() {
                 @Override
