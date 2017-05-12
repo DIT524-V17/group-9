@@ -38,6 +38,14 @@ public class ControlActivity extends AppCompatActivity {
 
     TextView autoText, lightText;
 
+    private ConnectedThread mConnectedThread;
+
+    Handler bluetoothIn;
+
+    final int handlerState = 0;                        //used to identify handler message
+    // private BluetoothAdapter btAdapter = null;
+    private StringBuilder recDataString = new StringBuilder();
+
     String address = null;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
@@ -113,6 +121,32 @@ public class ControlActivity extends AppCompatActivity {
 
             lightText = (TextView) findViewById(R.id.lightTextID);
             autoText = (TextView) findViewById(R.id.autoTextID);
+
+
+            bluetoothIn = new Handler() {
+                public void handleMessage(android.os.Message msg) {
+                    if (msg.what == handlerState) {                                     //if message is what we want
+                        String readMessage = (String) msg.obj;                                 // msg.arg1 = bytes from connect thread
+                        recDataString.append(readMessage);                                      //append string
+
+
+                        if (recDataString.charAt(0) == 'r')                             //if it starts with r we know it is what we are looking for
+                        {
+
+                            Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (recDataString.charAt(0) == 't')                             //if it starts with t we know it is what we are looking for
+                        {
+
+                            Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
+
+                        }
+                        recDataString.delete(0, recDataString.length());                    //clear all string data
+
+                    }
+                }
+            };
 
 
             // Set Button Action
@@ -388,9 +422,48 @@ public class ControlActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
                 isBtConnected = true;
+
+                mConnectedThread = new ConnectedThread(btSocket);
+                mConnectedThread.start();
             }
             progress.dismiss();
         }
+    }
+
+
+    //create new class for connect thread
+    private class ConnectedThread extends Thread  {
+        private final InputStream mmInStream;
+
+        //creation of the connect thread
+        public ConnectedThread(BluetoothSocket socket) {
+            InputStream tmpIn = null;
+
+            try {
+                //Create I/O streams for connection
+                tmpIn = socket.getInputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+        }
+
+        public void run()  {
+            byte[] buffer = new byte[256];
+            int bytes;
+
+            // Keep looping to listen for received messages
+            while (true) {
+                try {
+                    bytes = mmInStream.read(buffer);            //read bytes from input buffer
+                    String readMessage = new String(buffer, 0, bytes);
+                    // Send the obtained bytes to the UI Activity via handler
+                    bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+
     }
 
 
