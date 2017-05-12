@@ -19,7 +19,7 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public class JoystickScreen extends AppCompatActivity {
 
-    Button btnBlink, btnStop;
+    Button btnBlink, btnStop, btnBack;
     String address = null;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
@@ -76,6 +76,7 @@ public class JoystickScreen extends AppCompatActivity {
 
         btnBlink = (Button) findViewById(R.id.blinkLights);
         btnStop = (Button) findViewById(R.id.stopCar);
+        btnBack = (Button) findViewById(R.id.goBack);
 
         // Connect button to GUI
         JoystickView joystick = (JoystickView) findViewById(R.id.joystickView);
@@ -148,7 +149,20 @@ public class JoystickScreen extends AppCompatActivity {
                 setAction("q");
             }
         }));
+
+        btnBack.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(JoystickScreen.this, ControlActivity.class);
+                i.putExtra("ADDRESS", address);
+                startActivity(i);
+                Disconnect();
+                finish();
+            }
+        }));
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected (MenuItem item){

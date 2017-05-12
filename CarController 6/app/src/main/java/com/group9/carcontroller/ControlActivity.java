@@ -248,7 +248,7 @@ public class ControlActivity extends AppCompatActivity {
                     finish();
                 }
             });
-            
+
 
             autonomousSwich.setOnClickListener(new View.OnClickListener() {
                 @Override
