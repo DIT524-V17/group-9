@@ -28,20 +28,20 @@
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/pair"
+            android:id="@+id/pairCar"
             style="@style/CustomButtonText"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_btn_blue"
-            android:text="Connect to car" />
+            android:text="Pair a car" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnListCars"
             style="@style/CustomButtonText"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_btn_blue"
-            android:text="Display car" />
+            android:text="List Cars" />
 
         <ScrollView
             android:layout_width="match_parent"

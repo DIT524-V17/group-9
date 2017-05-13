@@ -46,8 +46,8 @@ public class ControlActivity extends AppCompatActivity {
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 
-
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
 
@@ -83,249 +83,251 @@ public class ControlActivity extends AppCompatActivity {
     }
 
 
+    private void carControl() {
+        setContentView(R.layout.activity_control);
 
-        private void carControl() {
-            setContentView(R.layout.activity_control);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //receive the address of the bluetooth device
+        Intent newint = getIntent();
+        address = newint.getStringExtra("ADDRESS");
+        autonomousOn = false;
+        followLightOn = false;
 
-            getSupportActionBar().setLogo(R.mipmap.ic_launcher);
-            getSupportActionBar().setDisplayUseLogoEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            //receive the address of the bluetooth device
-            Intent newint = getIntent();
-            address = newint.getStringExtra("ADDRESS");
-            autonomousOn = false;
-            followLightOn = false;
+        //Call the class to connect
+        /*We need an Asynchronous class to connect to not block te main thread(the Activity)*/
+        new ConnectBT().execute();
 
-            new ConnectBT().execute(); //Call the class to connect
+        // Connect button to GUI
+        btnUp = (ImageButton) findViewById(R.id.up);
+        btnDown = (ImageButton) findViewById(R.id.down);
+        btnLeft = (ImageButton) findViewById(R.id.left);
+        btnRight = (ImageButton) findViewById(R.id.right);
+        btnStop = (ImageButton) findViewById(R.id.stop);
+        btnBlink = (Button) findViewById(R.id.blink);
+        btnJoystick = (Button) findViewById(R.id.joystick);
 
-            // Connect button to GUI
-            btnUp = (ImageButton) findViewById(R.id.up);
-            btnDown = (ImageButton) findViewById(R.id.down);
-            btnLeft = (ImageButton) findViewById(R.id.left);
-            btnRight = (ImageButton) findViewById(R.id.right);
-            btnStop = (ImageButton) findViewById(R.id.stop);
-            btnBlink = (Button) findViewById(R.id.blink);
-            btnJoystick = (Button) findViewById(R.id.joystick);
+        autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
+        lightSwitch = (ToggleButton) findViewById(R.id.light);
 
-            autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
-            lightSwitch = (ToggleButton) findViewById(R.id.light);
-
-            lightText = (TextView) findViewById(R.id.lightTextID);
-            autoText = (TextView) findViewById(R.id.autoTextID);
-
-
-            // Set Button Action
-            btnUp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("f");
-                    btnUp.setImageResource(R.drawable.uparrowclicked);
-                    btnDown.setImageResource(R.drawable.downarrow);
-                    btnLeft.setImageResource(R.drawable.leftarrow);
-                    btnRight.setImageResource(R.drawable.rightarrow);
-                    btnStop.setImageResource(R.drawable.stopbutton);
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            setAction("q"); // Sends q after 2 seconds to stop car
-                            btnUp.setImageResource(R.drawable.uparrow);
-
-                        }
-                    }, 2000); // Delays action for 2 seconds (2000 milliseconds)
-
-                }
-            });
-
-            btnDown.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("b");
-                    btnUp.setImageResource(R.drawable.uparrow);
-                    btnDown.setImageResource(R.drawable.downarrowclicked);
-                    btnLeft.setImageResource(R.drawable.leftarrow);
-                    btnRight.setImageResource(R.drawable.rightarrow);
-                    btnStop.setImageResource(R.drawable.stopbutton);
+        lightText = (TextView) findViewById(R.id.lightTextID);
+        autoText = (TextView) findViewById(R.id.autoTextID);
 
 
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+        // Set Button Action
+        btnUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("f");
+                btnUp.setImageResource(R.drawable.uparrowclicked);
+                btnDown.setImageResource(R.drawable.downarrow);
+                btnLeft.setImageResource(R.drawable.leftarrow);
+                btnRight.setImageResource(R.drawable.rightarrow);
+                btnStop.setImageResource(R.drawable.stopbutton);
 
-                            setAction("q"); // Sends q after 2 seconds to stop car
-                            btnDown.setImageResource(R.drawable.downarrow);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                        }
-                    }, 2000); // Delays action for 2 seconds (2000 milliseconds)
-
-                }
-            });
-            btnLeft.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("l");
-                    btnUp.setImageResource(R.drawable.uparrow);
-                    btnDown.setImageResource(R.drawable.downarrow);
-                    btnLeft.setImageResource(R.drawable.leftarrowclicked);
-                    btnRight.setImageResource(R.drawable.rightarrow);
-                    btnStop.setImageResource(R.drawable.stopbutton);
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            btnLeft.setImageResource(R.drawable.leftarrow);
-
-                        }
-                    }, 1000); // Delays action for 1 seconds (2000 milliseconds)
-
-
-                }
-            });
-            btnRight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("r");
-                    btnUp.setImageResource(R.drawable.uparrow);
-                    btnDown.setImageResource(R.drawable.downarrow);
-                    btnLeft.setImageResource(R.drawable.leftarrow);
-                    btnRight.setImageResource(R.drawable.rightarrowclicked);
-                    btnStop.setImageResource(R.drawable.stopbutton);
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            btnRight.setImageResource(R.drawable.rightarrow);
-
-                        }
-                    }, 1000); // Delays action for 1 seconds (1000 milliseconds)
-
-
-                }
-            });
-            btnStop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("q");
-                    btnUp.setImageResource(R.drawable.uparrow);
-                    btnDown.setImageResource(R.drawable.downarrow);
-                    btnLeft.setImageResource(R.drawable.leftarrow);
-                    btnRight.setImageResource(R.drawable.rightarrow);
-                    btnStop.setImageResource(R.drawable.stopbuttonclicked);
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            btnStop.setImageResource(R.drawable.stopbutton);
-
-                        }
-                    }, 1000); // Delays action for 1 seconds (1000 milliseconds)
-                }
-            });
-            btnBlink.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setAction("j");
-                }
-            });
-
-            btnJoystick.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ControlActivity.this, JoystickScreen.class);
-                    i.putExtra("ADDRESS", address);
-                    startActivity(i);
-                    Disconnect();
-                    finish();
-                }
-            });
-
-
-            autonomousSwich.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (autonomousOn) {
-                        autonomousOn = false;
-                        btnDown.setVisibility(View.VISIBLE);
-                        btnUp.setVisibility(View.VISIBLE);
-                        btnLeft.setVisibility(View.VISIBLE);
-                        btnRight.setVisibility(View.VISIBLE);
-                        btnStop.setVisibility(View.VISIBLE);
-                        lightSwitch.setVisibility(View.VISIBLE);
-                        lightText.setVisibility(View.VISIBLE);
-                        setAction("s");
-                    } else {
-                        //TURN it on
-                        autonomousOn = true;
-                        btnDown.setVisibility(View.GONE);
-                        btnUp.setVisibility(View.GONE);
-                        btnLeft.setVisibility(View.GONE);
-                        btnRight.setVisibility(View.GONE);
-                        btnStop.setVisibility(View.GONE);
-                        lightSwitch.setVisibility(View.GONE);
-                        lightText.setVisibility(View.GONE);
-                        setAction("a");
-                    }
-                }
-            });
-
-
-            lightSwitch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (followLightOn) {
-                        followLightOn = false;
-                        btnDown.setVisibility(View.VISIBLE);
-                        btnUp.setVisibility(View.VISIBLE);
-                        btnLeft.setVisibility(View.VISIBLE);
-                        btnRight.setVisibility(View.VISIBLE);
-                        btnStop.setVisibility(View.VISIBLE);
-                        autonomousSwich.setVisibility(View.VISIBLE);
-                        autoText.setVisibility(View.VISIBLE);
-                        setAction("s");
-
-                    } else {
-                        //TURN it on
-                        followLightOn = true;
-                        btnDown.setVisibility(View.GONE);
-                        btnUp.setVisibility(View.GONE);
-                        btnLeft.setVisibility(View.GONE);
-                        btnRight.setVisibility(View.GONE);
-                        btnStop.setVisibility(View.GONE);
-                        autonomousSwich.setVisibility(View.GONE);
-                        autoText.setVisibility(View.GONE);
-                        setAction("w");
+                        setAction("q"); // Sends q after 2 seconds to stop car
+                        btnUp.setImageResource(R.drawable.uparrow);
 
                     }
-                }
-            });
+                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
 
-
-        }
-
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            // Take appropriate action for each action item click
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    Disconnect();
-                    finish();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
             }
+        });
+
+        btnDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("b");
+                btnUp.setImageResource(R.drawable.uparrow);
+                btnDown.setImageResource(R.drawable.downarrowclicked);
+                btnLeft.setImageResource(R.drawable.leftarrow);
+                btnRight.setImageResource(R.drawable.rightarrow);
+                btnStop.setImageResource(R.drawable.stopbutton);
+
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        setAction("q"); // Sends q after 2 seconds to stop car
+                        btnDown.setImageResource(R.drawable.downarrow);
+
+                    }
+                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+
+            }
+        });
+        btnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("l");
+                btnUp.setImageResource(R.drawable.uparrow);
+                btnDown.setImageResource(R.drawable.downarrow);
+                btnLeft.setImageResource(R.drawable.leftarrowclicked);
+                btnRight.setImageResource(R.drawable.rightarrow);
+                btnStop.setImageResource(R.drawable.stopbutton);
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        btnLeft.setImageResource(R.drawable.leftarrow);
+
+                    }
+                }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+
+
+            }
+        });
+        btnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("r");
+                btnUp.setImageResource(R.drawable.uparrow);
+                btnDown.setImageResource(R.drawable.downarrow);
+                btnLeft.setImageResource(R.drawable.leftarrow);
+                btnRight.setImageResource(R.drawable.rightarrowclicked);
+                btnStop.setImageResource(R.drawable.stopbutton);
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        btnRight.setImageResource(R.drawable.rightarrow);
+
+                    }
+                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+
+
+            }
+        });
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("q");
+                btnUp.setImageResource(R.drawable.uparrow);
+                btnDown.setImageResource(R.drawable.downarrow);
+                btnLeft.setImageResource(R.drawable.leftarrow);
+                btnRight.setImageResource(R.drawable.rightarrow);
+                btnStop.setImageResource(R.drawable.stopbuttonclicked);
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        btnStop.setImageResource(R.drawable.stopbutton);
+
+                    }
+                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+            }
+        });
+        btnBlink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAction("j");
+            }
+        });
+
+        btnJoystick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ControlActivity.this, JoystickScreen.class);
+                i.putExtra("ADDRESS", address);
+                startActivity(i);
+                Disconnect();
+                finish();
+            }
+        });
+
+
+        autonomousSwich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (autonomousOn) {
+                    autonomousOn = false;
+                    btnDown.setVisibility(View.VISIBLE);
+                    btnUp.setVisibility(View.VISIBLE);
+                    btnLeft.setVisibility(View.VISIBLE);
+                    btnRight.setVisibility(View.VISIBLE);
+                    btnStop.setVisibility(View.VISIBLE);
+                    lightSwitch.setVisibility(View.VISIBLE);
+                    lightText.setVisibility(View.VISIBLE);
+                    setAction("s");
+                } else {
+                    //TURN it on
+                    autonomousOn = true;
+                    btnDown.setVisibility(View.GONE);
+                    btnUp.setVisibility(View.GONE);
+                    btnLeft.setVisibility(View.GONE);
+                    btnRight.setVisibility(View.GONE);
+                    btnStop.setVisibility(View.GONE);
+                    lightSwitch.setVisibility(View.GONE);
+                    lightText.setVisibility(View.GONE);
+                    setAction("a");
+                }
+            }
+        });
+
+
+        lightSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (followLightOn) {
+                    followLightOn = false;
+                    btnDown.setVisibility(View.VISIBLE);
+                    btnUp.setVisibility(View.VISIBLE);
+                    btnLeft.setVisibility(View.VISIBLE);
+                    btnRight.setVisibility(View.VISIBLE);
+                    btnStop.setVisibility(View.VISIBLE);
+                    autonomousSwich.setVisibility(View.VISIBLE);
+                    autoText.setVisibility(View.VISIBLE);
+                    setAction("s");
+
+                } else {
+                    //TURN it on
+                    followLightOn = true;
+                    btnDown.setVisibility(View.GONE);
+                    btnUp.setVisibility(View.GONE);
+                    btnLeft.setVisibility(View.GONE);
+                    btnRight.setVisibility(View.GONE);
+                    btnStop.setVisibility(View.GONE);
+                    autonomousSwich.setVisibility(View.GONE);
+                    autoText.setVisibility(View.GONE);
+                    setAction("w");
+
+                }
+            }
+        });
+
+
+    }
+
+    /*Handle the back button action*/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Disconnect();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-
+   /*Disconnect (bluetooth socket)*/
     private void Disconnect() {
         if (btSocket != null) //If the btSocket is busy
         {
@@ -339,6 +341,7 @@ public class ControlActivity extends AppCompatActivity {
     }
 
 
+    /*Send a specific action to the Car*/
     private void setAction(String actionChar) {
         if (btSocket != null) {
             try {
@@ -349,9 +352,10 @@ public class ControlActivity extends AppCompatActivity {
         }
     }
 
+   /*This is an Asynchronous Task class used to handle the bluetooth connection
+    * This avoid the application to crash by not running the connection process on the main thread */
+    private class ConnectBT extends AsyncTask<Void, Void, Void> {
 
-    private class ConnectBT extends AsyncTask<Void, Void, Void>  // UI thread
-    {
         private boolean ConnectSuccess = true; //if it's here, it's almost connected
 
         @Override
@@ -366,7 +370,9 @@ public class ControlActivity extends AppCompatActivity {
                 if (btSocket == null || !isBtConnected) {
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
                     BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
-                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
+
+                    //create a RFCOMM (SPP) connection
+                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();//start connection
                 }
@@ -394,4 +400,4 @@ public class ControlActivity extends AppCompatActivity {
     }
 
 
-    }
+}
