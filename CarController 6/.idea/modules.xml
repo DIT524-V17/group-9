@@ -5,6 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/CarController 4 (Backup).iml" filepath="$PROJECT_DIR$/CarController 4 (Backup).iml" />
       <module fileurl="file://$PROJECT_DIR$/CarController 5.iml" filepath="$PROJECT_DIR$/CarController 5.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarController 6.iml" filepath="$PROJECT_DIR$/CarController 6.iml" />
+<<<<<<< HEAD
+=======
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+>>>>>>> 684049e249ad3552c05e526ecc870a7ad32493ec
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -38,6 +38,14 @@ public class ControlActivity extends AppCompatActivity {
 
     TextView autoText, lightText;
 
+    private ConnectedThread mConnectedThread;
+
+    Handler bluetoothIn;
+
+    final int handlerState = 0;                        //used to identify handler message
+    // private BluetoothAdapter btAdapter = null;
+    private StringBuilder recDataString = new StringBuilder();
+
     String address = null;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
@@ -96,9 +104,87 @@ public class ControlActivity extends AppCompatActivity {
         autonomousOn = false;
         followLightOn = false;
 
+<<<<<<< HEAD
         //Call the class to connect
         /*We need an Asynchronous class to connect to not block te main thread(the Activity)*/
         new ConnectBT().execute();
+=======
+            getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //receive the address of the bluetooth device
+            Intent newint = getIntent();
+            address = newint.getStringExtra("ADDRESS");
+            autonomousOn = false;
+            followLightOn = false;
+
+            new ConnectBT().execute(); //Call the class to connect
+
+            // Connect button to GUI
+            btnUp = (ImageButton) findViewById(R.id.up);
+            btnDown = (ImageButton) findViewById(R.id.down);
+            btnLeft = (ImageButton) findViewById(R.id.left);
+            btnRight = (ImageButton) findViewById(R.id.right);
+            btnStop = (ImageButton) findViewById(R.id.stop);
+            btnBlink = (Button) findViewById(R.id.blink);
+            btnJoystick = (Button) findViewById(R.id.joystick);
+
+            autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
+            lightSwitch = (ToggleButton) findViewById(R.id.light);
+
+            lightText = (TextView) findViewById(R.id.lightTextID);
+            autoText = (TextView) findViewById(R.id.autoTextID);
+
+
+            bluetoothIn = new Handler() {
+                public void handleMessage(android.os.Message msg) {
+                    if (msg.what == handlerState) {                                     //if message is what we want
+                        String readMessage = (String) msg.obj;                                 // msg.arg1 = bytes from connect thread
+                        recDataString.append(readMessage);                                      //append string
+
+
+                        if (recDataString.charAt(0) == 'r')                             //if it starts with r we know it is what we are looking for
+                        {
+
+                            Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (recDataString.charAt(0) == 't')                             //if it starts with t we know it is what we are looking for
+                        {
+
+                            Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
+
+                        }
+                        recDataString.delete(0, recDataString.length());                    //clear all string data
+
+                    }
+                }
+            };
+
+
+            // Set Button Action
+            btnUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setAction("f");
+                    btnUp.setImageResource(R.drawable.uparrowclicked);
+                    btnDown.setImageResource(R.drawable.downarrow);
+                    btnLeft.setImageResource(R.drawable.leftarrow);
+                    btnRight.setImageResource(R.drawable.rightarrow);
+                    btnStop.setImageResource(R.drawable.stopbutton);
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            setAction("q"); // Sends q after 2 seconds to stop car
+                            btnUp.setImageResource(R.drawable.uparrow);
+
+                        }
+                    }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+>>>>>>> 684049e249ad3552c05e526ecc870a7ad32493ec
 
         // Connect button to GUI
         btnUp = (ImageButton) findViewById(R.id.up);
@@ -394,10 +480,53 @@ public class ControlActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
                 isBtConnected = true;
+
+                mConnectedThread = new ConnectedThread(btSocket);
+                mConnectedThread.start();
             }
             progress.dismiss();
         }
     }
 
 
+<<<<<<< HEAD
 }
+=======
+    //create new class for connect thread
+    private class ConnectedThread extends Thread  {
+        private final InputStream mmInStream;
+
+        //creation of the connect thread
+        public ConnectedThread(BluetoothSocket socket) {
+            InputStream tmpIn = null;
+
+            try {
+                //Create I/O streams for connection
+                tmpIn = socket.getInputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+        }
+
+        public void run()  {
+            byte[] buffer = new byte[256];
+            int bytes;
+
+            // Keep looping to listen for received messages
+            while (true) {
+                try {
+                    bytes = mmInStream.read(buffer);            //read bytes from input buffer
+                    String readMessage = new String(buffer, 0, bytes);
+                    // Send the obtained bytes to the UI Activity via handler
+                    bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+
+    }
+
+
+    }
+>>>>>>> 684049e249ad3552c05e526ecc870a7ad32493ec
