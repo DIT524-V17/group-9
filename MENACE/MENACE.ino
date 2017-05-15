@@ -5,7 +5,7 @@
    @author - Nina (Version 1), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
-   @editor - Nina: Serial connection with the pi to receive the data when the red object is faced.
+   @editor - Nina: Serial connection with the pi to send the data when the red object is faced to the App.
    
 **/
 
@@ -37,6 +37,7 @@ const int ledLeft = 49;       // <---- the number of the LED pin
 */
 char input = 0;                     // <---- for the bluetooth connection
 char output = 0;                    // <---- for the bluetooth connection
+char piInput = 0;                   // <---- for the pi connection
 unsigned int tempSpeed = 0;         // <---- for setting the velocity
 int ledStateLeft = LOW;             // <---- led state used to set the LED
 int ledStateRight = LOW;            // <---- led state used to set the LED
