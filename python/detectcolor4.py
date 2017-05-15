@@ -1,19 +1,20 @@
 #author Syeda Elham Shahed
+#pushed to Git by Syeda Elham Shahed
 from picamera import PiCamera
 from time import sleep
 import cv2
 import numpy as np
 import argparse
-import serial
-import time
+import serial                             #author: Kosara
+import time                               #author: Kosara
 x = 'w'
 
-ser = serial.Serial('/dev/ttyACM0', 9600) # kosara
+ser = serial.Serial('/dev/ttyACM0', 9600) #author: Kosara
 
-while True:
+while True:                               #author: Kosara
         
-        x = ser.readline()
-        print x
+        x = ser.readline()                #author: Kosara
+        print x                           #author: Kosara
 
         if x != 'w': 
                 ##Create Camera
