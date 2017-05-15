@@ -41,9 +41,9 @@ char piInput = 0;                   // <---- for the pi connection
 unsigned int tempSpeed = 0;         // <---- for setting the velocity
 int ledStateLeft = LOW;             // <---- led state used to set the LED
 int ledStateRight = LOW;            // <---- led state used to set the LED
-const long intervalLeft = 1000;     // <---- interval to blink (milliseconds)
-const long intervalRight = 1000;    // <---- interval to blink (milliseconds)
-const int blinkDuration = 500;      // <---- number of millisecs that Led's are on - all three leds use this
+unsigned long intervalLeft = 1000;     // <---- interval to blink (milliseconds)
+unsigned long intervalRight = 1000;    // <---- interval to blink (milliseconds)
+unsigned long blinkDuration = 500;      // <---- number of millisecs that Led's are on - all three leds use this
 unsigned long currentMillis = 0;    // <---- stores the value of millis() in each iteration of loop()
 unsigned long previousMillisL = 0;  // <---- to store last time LED at the left side was updated
 unsigned long previousMillisR = 0;  // <---- to store last time LED at the right side was updated
@@ -93,7 +93,7 @@ void loop() {
       turnRight();
     }
 
-    moveCar(70, 70);        // <-- Car is always moving unless there is an obstacle in front
+    moveCar(100, 100);        // <-- Car is always moving unless there is an obstacle in front
     checkSerialInput();     // <-- Check for new input from the bluetooth
 
     /* Enter this section when in manual mode */
@@ -294,13 +294,13 @@ void goManual() {
 
   if (input == 'f') {       // <-- Check the user command to drive forwards
     if (canDriveForward) {  // <-- Perform an obstacle check before driving
-      moveCar(70, 70);
+      moveCar(100, 100);
     }
   }
 
   if (input == 'b') {        // <-- Check the user command to drive backwards
     if (canDriveBackward) {  // <-- Perform an obstacle check before driving
-      goBack(70, 70);
+      goBack(100, 100);
     }
   }
 
