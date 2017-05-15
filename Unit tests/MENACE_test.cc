@@ -53,6 +53,14 @@ public:
     setup();
 }
 
+// Check that the car stops when Serial3 receives a 'q'
+TEST_F(MENACEFixture, serial_stop) {
+    EXPECT_CALL(*serialMockock, read())
+    .WillOnce(Return('q'));
+    EXPECT_CALL(*carMock, stop());
+    loop();
+}
+
 int main(int argc, char* argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
