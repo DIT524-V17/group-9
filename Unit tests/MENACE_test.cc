@@ -16,10 +16,10 @@ using ::testing::_; // Needed to use the "anything matcher"
 class MENACEFixture : public ::testing::Test
 {
 public:
-	ArduinoMock* arduinoMock; // Necessary for delay()
-	SerialMock* serialMock;  // In this case, this is the Serial3/Bluetooth
-	GyroscopeMock* gyroscopeMock;
-	CarMock* carMock;
+    ArduinoMock* arduinoMock; // Necessary for delay()
+    SerialMock* serialMock;  // In this case, this is the Serial3/Bluetooth
+    GyroscopeMock* gyroscopeMock;
+    CarMock* carMock;
     SR04Mock* SR04_mock;
     // Run this before the tests
     virtual void SetUp()
@@ -28,7 +28,7 @@ public:
 	serialMock = serialMockInstance();
 	gyroscopeMock = gyroscopeMockInstance();
 	carMock = carMockInstance();
-    SR04_mock = SR04MockInstance();
+    	SR04_mock = SR04MockInstance();
     }
     // Run this after the tests
     virtual void TearDown()
@@ -36,21 +36,21 @@ public:
 	releaseArduinoMock();
 	releaseSerialMock();
 	releaseGyroscopeMock();
-    releaseCarMock();
-    releaseSR04Mock();
+    	releaseCarMock();
+    	releaseSR04Mock();
     }
 };
 
-// Check that the sensor is attached and that the car is initialized
-TEST_F(MENACEFixture, initsAreCalled) {
-	EXPECT_CALL(*serialMock, begin(9600));  // Baud rate is 9600
-	EXPECT_CALL(*gyroscopeMock, attach());
-	EXPECT_CALL(*carMock, begin(_));        // Pass the gyroscope as an argument
-	InSequence seq;
+    // Check that the sensor is attached and that the car is initialized
+    TEST_F(MENACEFixture, initsAreCalled) {
+    EXPECT_CALL(*serialMock, begin(9600));  // Baud rate is 9600
+    EXPECT_CALL(*gyroscopeMock, attach());
+    EXPECT_CALL(*carMock, begin(_));        // Pass the gyroscope as an argument
+    InSequence seq;
     // Everything below this has to happen in the specific sequence
     EXPECT_CALL(*SR04_mock, attach(51, 50));
     EXPECT_CALL(*SR04_mock, attach(45, 44));
-	setup();
+    setup();
 }
 
 int main(int argc, char* argv[]) {
