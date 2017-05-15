@@ -5,7 +5,8 @@
    @author - Nina (Version 1), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
-
+   @editor - Nina: Serial connection with the pi to receive the data when the red object is faced.
+   
 **/
 
 #include<Smartcar.h>
@@ -56,10 +57,10 @@ boolean canDriveBackward = true;    // <---- boolean value to allow the car to m
   ===============================================
 */
 void setup() {
-  
-  /* Initialize the Bluetooth serial */
-  Serial3.begin(9600);        // <--  Opens serial port, set data rate to 9600 bps
 
+  /* Initialize the Bluetooth serial */
+  Serial3.begin(9600);        // <--  Opens serial port to the App, set data rate to 9600 bps
+  Serial.begin(9600);         // <--  Opens serial port to the Pi, set data rate to 9600 bps
   /* Check if the front and back sensor and the gyroscope are attached to the Pin */
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
@@ -94,11 +95,11 @@ void loop() {
     moveCar(70, 70);        // <-- Car is always moving unless there is an obstacle in front
     checkSerialInput();     // <-- Check for new input from the bluetooth
 
-  /* Enter this section when in manual mode */
+    /* Enter this section when in manual mode */
   } else {
 
     /* The car proccess the commands from user but stops in case of obstacle */
-    
+
     delay(1000);
     ObstacleF();            // <-- Check allways the obstacle in the front
     ObstacleB();            // <-- Check allways the obstacle in the back
@@ -148,7 +149,7 @@ void blinkLeft() {
 
 /* Method to turn Off both lights */
 void blinkOff() {
-  
+
   ledStateLeft = LOW;   // <-- Set off the right led
   ledStateRight = LOW;  // <-- Set off the right led
   digitalWrite(ledLeft, ledStateLeft);   // <-- Send the values to the digital pin
@@ -157,7 +158,7 @@ void blinkOff() {
 
 /* Method to make both lights blink 4 times */
 void blinkAlert() {
-  
+
   blinkLeft();    // <-- Calling the methods for blink the left lights
   blinkRight();   // <-- Calling the methods for blink the right lights
 }
@@ -203,13 +204,13 @@ void turnLeftM() {
 
 /* Method to make the car move given a speed */
 void moveCar(int tempSpeedL, int tempSpeedR) {
-  
+
   car.setMotorSpeed(tempSpeedR, tempSpeedL);
 }
 
 /* Method to make the car stop */
 void stopCar() {
-  
+
   car.stop();
   input = 0;      // <-- Dont listen to blutooth input anymore
   delay(100);     // <-- The API documentation requires a 100 ms delay (Thats what I understood :P )
@@ -217,7 +218,7 @@ void stopCar() {
 
 /* Method to make the car go backwards */
 void goBack(int tempSpeedL, int tempSpeedR) {
-  
+
   car.setMotorSpeed(-(tempSpeedR), -(tempSpeedL));  //<-- Just set the speed but in reverse
 }
 /*===============================================
@@ -229,9 +230,9 @@ void goBack(int tempSpeedL, int tempSpeedR) {
 void ObstacleF() {
 
   if (ObstacleFront()) {      // <-- If there is an obstacle in the front of the car, don't allow the car to moves forward
-    canDriveForward = false;  
+    canDriveForward = false;
   } else {                    // <-- If there isn't an obstacle in the front of the car, allow the car to moves forward
-    canDriveForward = true;  
+    canDriveForward = true;
   }
 }
 
@@ -239,21 +240,21 @@ void ObstacleF() {
 void ObstacleB() {
 
   if (ObstacleBack()) {       // <-- If there is an obstacle in the back of the car, don't allow the car to moves backward
-    canDriveBackward = false; 
+    canDriveBackward = false;
   } else {                    // <-- If there isn't an obstacle in the back of the car, allow the car to moves backward
-    canDriveBackward = true; 
+    canDriveBackward = true;
   }
 }
 
 /* Checks the front sensor readings for obstacles, blink the light and stop the car */
 boolean ObstacleFront() {
-  
+
   distanceObF = sensorFront.getDistance();
-  if (distanceObF > 0 && distanceObF < 30) { // <-- If an obstacle in the front is found perform accordly 
+  if (distanceObF > 0 && distanceObF < 30) { // <-- If an obstacle in the front is found perform accordly
     blinkAlert();   // <-- Call the method to make the lights blink
     stopCar();      // <-- Call the method to stop the car
 
-    output = 'r'; 
+    output = 'r';
     Serial3.println(output); // <-- Send the value 'r' to the application
 
     blinkOff();     // <-- Call the method to stop blinking
@@ -285,7 +286,7 @@ boolean ObstacleBack() {
 
 /* Proccess the input from the bluetooth */
 void goManual() {
-/* Condiftions to perform movement in the car based on the user's input in the application */
+  /* Condiftions to perform movement in the car based on the user's input in the application */
   if (input == 'q') {       // <-- Check the user command to stop the car
     stopCar();
   }
@@ -301,7 +302,7 @@ void goManual() {
       goBack(70, 70);
     }
   }
-  
+
   if (input == 'l') {        // <-- Check the user command to turn left
     turnLeftM();
   }
@@ -320,19 +321,31 @@ void goManual() {
 
 /* Proccess the blutooth input for autonmous mode switching */
 void modeSelection() {
-  
+
   switch (input) {
     case 'a':            // <-- Selecting the autonomous mode (Robots will invade us :D)
       goAuto1 = true;
       break;
-      
+
     case 's':            // <-- STATIC no movement (Toggles the autonmous mode off)
       stopCar();
       goAuto1 = false;
       break;
-      
+
+    case 'o':            // <-- Send 'o' to the Pi to idenfity red object
+      Serial.println("o");
+      delay(2000);
+      readSerial(); //will receive the info from the pi
+      Serial3.println(piInput);
+      break;
+
+    case 'w':            // <-- To break the identify red object
+      Serial.println("w");
+      delay(2000);
+      break;
+
     default:             // <-- The manual mode is the default mode
-      goManual();       
+      goManual();
   }
 }
 
@@ -341,7 +354,7 @@ void modeSelection() {
   ===============================================
 */
 void checkSerialInput() {
-  
+
   if (Serial3.available() > 0) { // <-- Get data only when bluetooth available
     input = Serial3.read();
   }
@@ -352,8 +365,8 @@ void checkSerialInput() {
   ===============================================
 */
 void readSerial() {
-  
+
   if (Serial.available() > 0) { // <-- Get data only when Serial port is available
-    input = Serial.read();
+    piInput = Serial.read();
   }
 }
