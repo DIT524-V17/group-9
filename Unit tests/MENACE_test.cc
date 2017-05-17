@@ -56,7 +56,7 @@ public:
  * the car is in autonomous mode
  */
 TEST_F(MENACEFixture, goAuto_mode) {
-    EXPECT_CALL(*serialMockock, read())
+    EXPECT_CALL(*serialMock, read())
     .WillOnce(Return('a'));
     //tests if both motors have 100 for speed,which will make the car go forward
     EXPECT_CALL(*carMock, getMotorSpeed(100,100));
@@ -65,7 +65,7 @@ TEST_F(MENACEFixture, goAuto_mode) {
 
 // Check that the car stops when Serial3 receives a 'q'
 TEST_F(MENACEFixture, serial_stop) {
-    EXPECT_CALL(*serialMockock, read())
+    EXPECT_CALL(*serialMock, read())
     .WillOnce(Return('q'));
     EXPECT_CALL(*carMock, stop());
     loop();
