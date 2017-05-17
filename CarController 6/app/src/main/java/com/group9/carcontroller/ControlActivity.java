@@ -1,13 +1,3 @@
-/**
- * Class with all the main functions of the applications,
- * e.g. control buttons for manual mode, buttons for turning autonomous
- * and light recognition mode on/off, a button for switching to joystick
- * mode and a button for making the car lights blink.
- *
- * @author Isak
- * @author Melinda
- * @author Nina Uljanic : lines 136-137, 341, 355-391
- */
 package com.group9.carcontroller;
 
 import android.app.ProgressDialog;
@@ -15,19 +5,26 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -37,11 +34,11 @@ public class ControlActivity extends AppCompatActivity {
     //Define buttons
     Button btnBlink, btnJoystick;
     ImageButton btnUp, btnDown, btnStop, btnLeft, btnRight;
-    ToggleButton autonomousSwitch, lightSwitch;
+    ToggleButton autonomousSwich, lightSwitch;
 
     boolean autonomousOn, followLightOn;
 
-    TextView autoText, lightText, piCamText;
+    TextView autoText, lightText;
 
     private ConnectedThread mConnectedThread;
 
@@ -71,14 +68,17 @@ public class ControlActivity extends AppCompatActivity {
 
                 carControl();
 
+
             }
         }, 1500); // Delays action for 1,5 seconds (1500 milliseconds)
+
     }
 
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -87,7 +87,9 @@ public class ControlActivity extends AppCompatActivity {
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.activity_control);
         }
+
         carControl();
+
     }
 
 
@@ -104,9 +106,11 @@ public class ControlActivity extends AppCompatActivity {
         autonomousOn = false;
         followLightOn = false;
 
+
         //Call the class to connect
             /*We need an Asynchronous class to connect to not block te main thread(the Activity)*/
         new ConnectBT().execute();
+
 
         // Connect button to GUI
         btnUp = (ImageButton) findViewById(R.id.up);
@@ -117,14 +121,12 @@ public class ControlActivity extends AppCompatActivity {
         btnBlink = (Button) findViewById(R.id.blink);
         btnJoystick = (Button) findViewById(R.id.joystick);
 
-        autonomousSwitch = (ToggleButton) findViewById(R.id.autonomous);
+        autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
         lightSwitch = (ToggleButton) findViewById(R.id.light);
 
         lightText = (TextView) findViewById(R.id.lightTextID);
         autoText = (TextView) findViewById(R.id.autoTextID);
 
-        piCamText = (TextView) findViewById(R.id.piCam);
-        piCamText.setVisibility(View.GONE);
 
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -132,16 +134,155 @@ public class ControlActivity extends AppCompatActivity {
                     String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //append string
 
+
                     if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
                     {
+
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+                        //btnUp.setImageResource(R.drawable.uparrow);
+                        //btnDown.setImageResource(R.drawable.downarrow);
+                        btnUp.setEnabled(false);
+                        btnDown.setEnabled(false);
+                        btnUp.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+                        btnDown.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+
+
+                        btnLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                setAction("l");
+                                btnUp.setImageResource(R.drawable.uparrow);
+                                btnDown.setImageResource(R.drawable.downarrow);
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnLeft.setImageResource(R.drawable.leftarrowclicked);
+                                btnRight.setImageResource(R.drawable.rightarrow);
+                                btnStop.setImageResource(R.drawable.stopbutton);
+                                btnUp.setEnabled(true);
+                                btnDown.setEnabled(true);
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        btnLeft.setImageResource(R.drawable.leftarrow);
+
+                                    }
+                                }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+
+
+                            }
+                        });
+                        btnRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                setAction("r");
+                                btnUp.setImageResource(R.drawable.uparrow);
+                                btnDown.setImageResource(R.drawable.downarrow);
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnLeft.setImageResource(R.drawable.leftarrow);
+                                btnRight.setImageResource(R.drawable.rightarrowclicked);
+                                btnStop.setImageResource(R.drawable.stopbutton);
+                                btnUp.setEnabled(true);
+                                btnDown.setEnabled(true);
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        btnRight.setImageResource(R.drawable.rightarrow);
+
+                                    }
+                                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+
+
+                            }
+                        });
+
+
                     }
 
                     if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
                     {
+
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
+                        btnUp.setImageResource(R.drawable.uparrow);
+                        btnDown.setImageResource(R.drawable.downarrow);
+                        btnUp.setEnabled(false);
+                        btnDown.setEnabled(false);
+                        btnUp.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+                        btnDown.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+
+
+                        btnLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                clickLeft();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                                btnDown.setEnabled(true);
+
+                                /*
+                                setAction("l");
+                                btnUp.setImageResource(R.drawable.uparrow);
+                                btnDown.setImageResource(R.drawable.downarrow);
+                                btnLeft.setImageResource(R.drawable.leftarrowclicked);
+                                btnRight.setImageResource(R.drawable.rightarrow);
+                                btnStop.setImageResource(R.drawable.stopbutton);
+
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        btnLeft.setImageResource(R.drawable.leftarrow);
+
+                                    }
+                                }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+                                */
+
+                            }
+                        });
+
+                        btnRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                clickRight();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                                btnDown.setEnabled(true);
+
+                                /*
+                                setAction("r");
+                                btnUp.setImageResource(R.drawable.uparrow);
+                                btnDown.setImageResource(R.drawable.downarrow);
+                                btnLeft.setImageResource(R.drawable.leftarrow);
+                                btnRight.setImageResource(R.drawable.rightarrowclicked);
+                                btnStop.setImageResource(R.drawable.stopbutton);
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        btnRight.setImageResource(R.drawable.rightarrow);
+
+                                    }
+                                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+
+                            */
+
+                            }
+                        });
                     }
                     recDataString.delete(0, recDataString.length()); //clear all string data
+
                 }
             }
         };
@@ -169,6 +310,7 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
+
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,6 +320,7 @@ public class ControlActivity extends AppCompatActivity {
                 btnLeft.setImageResource(R.drawable.leftarrow);
                 btnRight.setImageResource(R.drawable.rightarrow);
                 btnStop.setImageResource(R.drawable.stopbutton);
+
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -189,12 +332,15 @@ public class ControlActivity extends AppCompatActivity {
 
                     }
                 }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+
             }
         });
-
         btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clickLeft();
+
+            /*
                 setAction("l");
                 btnUp.setImageResource(R.drawable.uparrow);
                 btnDown.setImageResource(R.drawable.downarrow);
@@ -211,12 +357,19 @@ public class ControlActivity extends AppCompatActivity {
 
                     }
                 }, 1000); // Delays action for 1 seconds (2000 milliseconds)
-            }
-        });
+            */
 
+            }
+
+
+        });
         btnRight.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                clickRight();
+
+            /*
                 setAction("r");
                 btnUp.setImageResource(R.drawable.uparrow);
                 btnDown.setImageResource(R.drawable.downarrow);
@@ -233,8 +386,13 @@ public class ControlActivity extends AppCompatActivity {
 
                     }
                 }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+            */
+
             }
+
+
         });
+
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,7 +415,6 @@ public class ControlActivity extends AppCompatActivity {
                 }, 1000); // Delays action for 1 seconds (1000 milliseconds)
             }
         });
-
         btnBlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,7 +434,7 @@ public class ControlActivity extends AppCompatActivity {
         });
 
 
-        autonomousSwitch.setOnClickListener(new View.OnClickListener() {
+        autonomousSwich.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (autonomousOn) {
@@ -305,6 +462,7 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
+
         lightSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,11 +473,9 @@ public class ControlActivity extends AppCompatActivity {
                     btnLeft.setVisibility(View.VISIBLE);
                     btnRight.setVisibility(View.VISIBLE);
                     btnStop.setVisibility(View.VISIBLE);
-                    autonomousSwitch.setVisibility(View.VISIBLE);
+                    autonomousSwich.setVisibility(View.VISIBLE);
                     autoText.setVisibility(View.VISIBLE);
-                    setAction("w");
-
-                    piCamText.setVisibility(View.GONE);
+                    setAction("s");
 
                 } else {
                     //TURN it on
@@ -329,43 +485,10 @@ public class ControlActivity extends AppCompatActivity {
                     btnLeft.setVisibility(View.GONE);
                     btnRight.setVisibility(View.GONE);
                     btnStop.setVisibility(View.GONE);
-                    autonomousSwitch.setVisibility(View.GONE);
+                    autonomousSwich.setVisibility(View.GONE);
                     autoText.setVisibility(View.GONE);
-                    setAction("o");
+                    setAction("w");
 
-                    /**
-                     * Nina Uljanic
-                     * SEM V17
-                     * group-9 : MENACE
-                     * 11.05.2017.
-                     */
-
-                    //Add the picture/text and the toasts: there is an object and there is not
-                    piCamText.setVisibility(View.VISIBLE);
-
-                    //Await data from the car
-
-                    bluetoothIn = new Handler() {
-                        public void handleMessage(android.os.Message msg) {
-                            if (msg.what == handlerState) { //if message is what we want
-                                String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
-                                recDataString.append(readMessage); //append string
-
-                                //need a counter; after 3 pop the toast
-
-                                if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
-                                {
-                                    Toast.makeText(getApplicationContext(), "Red object detected.", Toast.LENGTH_SHORT).show();
-                                }
-
-                                if (recDataString.charAt(0) == 'n') //if it starts with t we know it is what we are looking for
-                                {
-                                    Toast.makeText(getApplicationContext(), "No red object detected.", Toast.LENGTH_SHORT).show();
-                                }
-                                recDataString.delete(0, recDataString.length()); //clear all string data
-                            }
-                        }
-                    };
                 }
             }
         });
@@ -396,6 +519,47 @@ public class ControlActivity extends AppCompatActivity {
             }
         }
         finish(); //return to the first layout
+    }
+
+    private void clickLeft(){
+        setAction("l");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrowclicked);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnLeft.setImageResource(R.drawable.leftarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+
+    }
+
+    private void clickRight(){
+        setAction("r");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrowclicked);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnRight.setImageResource(R.drawable.rightarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+
+
     }
 
 

@@ -35,7 +35,7 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_gravity="center"
-                   android:text="RedObj:"
+                   android:text="Light: "
                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                    android:textColor="@android:color/background_light"
                    android:textStyle="bold" />
@@ -115,27 +115,14 @@
 
        </LinearLayout>
 
-        <TextView
-            android:id="@+id/piCam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="45dp"
-            android:layout_weight="0.46"
-            android:text="PiCam is working..."
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-
-        <ImageButton
+       <ImageButton
            android:id="@+id/up"
            android:layout_width="60dp"
            android:layout_height="60dp"
            android:layout_gravity="center"
            app:srcCompat="@drawable/uparrow" />
 
-        <LinearLayout
+       <LinearLayout
            android:layout_width="wrap_content"
            android:layout_height="match_parent"
            android:layout_column="19"
