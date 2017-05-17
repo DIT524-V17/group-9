@@ -9,7 +9,7 @@
 
 #include "../../src/MENACE.ino" // Our production code
 
-using ::testing::InSequence;  
+using ::testing::InSequence;
 using ::testing::Return; // Needed to use "Return"
 using ::testing::_; // Needed to use the "anything matcher"
 
@@ -48,9 +48,19 @@ public:
     EXPECT_CALL(*carMock, begin(_));        // Pass the gyroscope as an argument
     InSequence seq;
     // Everything below this has to happen in the specific sequence
-    EXPECT_CALL(*SR04_mock, attach(51, 50));
-    EXPECT_CALL(*SR04_mock, attach(45, 44));
+    EXPECT_CALL(*SR04_mock, attach(51, 50)); // front Sensor
+    EXPECT_CALL(*SR04_mock, attach(45, 44)); // back Sensor
     setup();
+}
+/* checks when the Serial3 receives an 'a',
+ * the car is in autonomous mode
+ */
+TEST_F(MENACEFixture, goAuto_mode) {
+    EXPECT_CALL(*serialMockock, read())
+    .WillOnce(Return('a'));
+    //tests if both motors have 100 for speed,which will make the car go forward
+    EXPECT_CALL(*carMock, getMotorSpeed(100,100));
+    loop();
 }
 
 // Check that the car stops when Serial3 receives a 'q'
