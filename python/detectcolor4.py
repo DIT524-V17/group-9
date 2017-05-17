@@ -27,8 +27,8 @@ ser = serial.Serial('/dev/ttyACM0', 9600) # Kosara's code
 # The code must run during the Arduino is on, waiting for a command from the user. 
 while 1:
         
-        x = ser.readline()                # Kosara's code
-        print x                           # Kosara's code
+        x = ser.readline()                
+        print x                           
 
         if x != 'w': 
                 # Create Camera, set a resolution, save it and close the camera
