@@ -5,7 +5,7 @@
  * mode and a button for making the car lights blink.
  *
  * @author Isak
- * @author Melinda
+ * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
  * @author Nina Uljanic : lines 136-137, 341, 355-391
  */
 package com.group9.carcontroller;
@@ -16,6 +16,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -135,11 +136,73 @@ public class ControlActivity extends AppCompatActivity {
                     if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+
+                        /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
+                        btnUp.setEnabled(false);
+                        btnUp.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+
+                        btnLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressLeft();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                            }
+                        });
+
+                        btnRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressRight();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                            }
+                        });
+
+                        btnDown.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressDown();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                            }
+                        });
                     }
 
                     if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
+
+                        /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
+                        btnDown.setEnabled(false);
+                        btnDown.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+
+                        btnLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressLeft();
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setEnabled(true);
+                            }
+                        });
+
+                        btnRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressRight();
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setEnabled(true);
+                            }
+                        });
+
+                        btnUp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressUp();
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setEnabled(true);
+                            }
+                        });
                     }
                     recDataString.delete(0, recDataString.length()); //clear all string data
                 }
@@ -149,92 +212,34 @@ public class ControlActivity extends AppCompatActivity {
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setAction("f");
-                btnUp.setImageResource(R.drawable.uparrowclicked);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        setAction("q"); // Sends q after 2 seconds to stop car
-                        btnUp.setImageResource(R.drawable.uparrow);
-
-                    }
-                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+                pressUp();
             }
         });
+
 
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAction("b");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrowclicked);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        setAction("q"); // Sends q after 2 seconds to stop car
-                        btnDown.setImageResource(R.drawable.downarrow);
-
-                    }
-                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+                pressDown();
             }
         });
 
         btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAction("l");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrowclicked);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        btnLeft.setImageResource(R.drawable.leftarrow);
-
-                    }
-                }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+                pressLeft();
             }
         });
 
         btnRight.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                setAction("r");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrowclicked);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        btnRight.setImageResource(R.drawable.rightarrow);
-
-                    }
-                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+                pressRight();
             }
         });
+
+
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -383,6 +388,89 @@ public class ControlActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*Handle when left arrow is clicked*/
+    private void pressLeft(){
+        setAction("l");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrowclicked);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnLeft.setImageResource(R.drawable.leftarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+    }
+
+    /*Handle when right arrow is clicked*/
+    private void pressRight(){
+        setAction("r");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrowclicked);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnRight.setImageResource(R.drawable.rightarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+    }
+
+    /*Handle when up arrow is clicked*/
+    private void pressUp(){
+        setAction("f");
+        btnUp.setImageResource(R.drawable.uparrowclicked);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                setAction("q"); // Sends q after 2 seconds to stop car
+                btnUp.setImageResource(R.drawable.uparrow);
+
+            }
+        }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+    }
+
+    /*Handle when down arrow is clicked*/
+    private void pressDown(){
+        setAction("b");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrowclicked);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                setAction("q"); // Sends q after 2 seconds to stop car
+                btnDown.setImageResource(R.drawable.downarrow);
+
+            }
+        }, 2000); // Delays action for 2 seconds (2000 milliseconds)
     }
 
     /*Disconnect (bluetooth socket)*/
