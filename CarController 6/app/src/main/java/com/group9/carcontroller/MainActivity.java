@@ -1,3 +1,14 @@
+/*
+ * This Activity was created as a home page to achieve the Bluetooth paring process,
+ * by initializing 2 buttons, "Pair a car":  checks and request a "Critical" permission,
+ * And it should be requested in SDK>=23 (in Marshmallow)
+ * which REQUIRES : BLUETOOTH_ADMIN permission(to change the bluetooth configuration and turing on the BT device).
+ * "Cars' list": Checks the paired devices list and request a "Critical" permission,
+ * which REQUIRES : BLUETOOTH permission(to use the bluetooth connection).
+ *
+ * @author - Rema Salman
+ */
+
 package com.group9.carcontroller;
 
 import android.Manifest;
@@ -47,19 +58,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         /*
-        * When the application is launched we should check if the device have a bluetooth device
+        * Checking if the device have a bluetooth device, when the application is launched
         * and Turn on the bluetooth if so..
         * Check  turnOnBluetooth() and checkAndRequestPermissions()
         * REQUIRES : BLUETOOTH_ADMIN permission
         * */
 
-        /*In Marshmallow we should ask for the "Critical" permissions*/
+        /* Ask for the "Critical" permissions, in Marshmallow*/
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             if (checkAndRequestPermissions()) {
                 // carry on the normal flow, as the case of permissions granted.
                 turnOnBluetooth();
             } else {
-                //Otherwise we should degrade the functionality
+                // Degrade the functionality
                 Toast.makeText(getApplicationContext(), "Bluetooth permission is required to connect to the car", Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -71,17 +82,18 @@ public class MainActivity extends AppCompatActivity {
         * Check pairedDevicesList() and checkAndRequestPermissions()
         * REQUIRES : BLUETOOTH permission
         * */
+
         btnList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 devicelist.setVisibility(View.VISIBLE);
-                  /*In Marshmallow we should ask for the "Critical" permissions*/
+                  /* Ask for the "Critical" permissions, in Marshmallow*/
                 if (android.os.Build.VERSION.SDK_INT >= 23) {
                     if (checkAndRequestPermissions()) {
                         // carry on the normal flow, as the case of permissions granted.
                         pairedDevicesList(); //method that will be called
                     } else {
-                        //Otherwise we should degrade the functionality
+                        // Degrade the functionality
                         Toast.makeText(getApplicationContext(), "Bluetooth permission is required to connect to the car", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -96,17 +108,18 @@ public class MainActivity extends AppCompatActivity {
         * checkAndRequestPermissions()
         * REQUIRES : BLUETOOTH_ADMIN permission
         * */
+
         btnPair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  /*In Marshmallow we should ask for the "Critical" permissions*/
+                  /* Ask for the "Critical" permissions, in Marshmallow*/
                 if (android.os.Build.VERSION.SDK_INT >= 23) {
                     if (checkAndRequestPermissions()) {
                         Intent intentBluetooth = new Intent();
                         intentBluetooth.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
                         startActivity(intentBluetooth);
                     } else {
-                        //Otherwise we should degrade the functionality
+                        // Degrade the functionality
                         Toast.makeText(getApplicationContext(), "Bluetooth permission is required to connect to the car", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -135,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             //finish();
         } else {
             if (myBluetooth.isEnabled()) {
-                // every thing is workeing as intended
+                // every thing is working as intended
             } else {
                 //Ask to the user turn the bluetooth on
                 Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -148,10 +161,11 @@ public class MainActivity extends AppCompatActivity {
     *   - Get a list of all paired devices
     *   - Display them in the listview
     *   - Add an action for each item
-    *       - Action is to open new Controller intent for the device clicked on
+    *   - Action is to open new Controller intent for the device clicked on
     *
     * REQUIRES : BLUETOOTH permission
     */
+
     private void pairedDevicesList() {
         // Request the paired devices list from the bluetooth settings
         pairedDevices = myBluetooth.getBondedDevices();
@@ -196,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     /*
-    This part is Marshmallow specific as we have to ask for the permission in real-time
+    This part is Marshmallow specific, that asks for the permission in real-time
     ----------------------
     * In Android versions 23 and above .. the application should request the user's permission
     * before using the corresponding device or a service
     * --------------------
-    * In this application we only have two permissions used:
+    * In this application, only two permissions are used:
     * BLUETOOTH(Use the bluetooth connection) and
     * BLUETOOTH_ADMIN(for changing configuration and turing on the BT device)
     * They are declared in the application's (manifest)*/
