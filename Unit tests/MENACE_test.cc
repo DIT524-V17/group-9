@@ -20,7 +20,8 @@ public:
     SerialMock* serialMock;  // In this case, this is the Serial3/Bluetooth
     GyroscopeMock* gyroscopeMock;
     CarMock* carMock;
-    SR04Mock* SR04_mock;
+    SR04Mock* SR04_mock; //This is the distance sensor
+    motorsMock* motorsMock; // this is the car's motors
     // Run this before the tests
     virtual void SetUp()
     {
@@ -29,6 +30,7 @@ public:
 	gyroscopeMock = gyroscopeMockInstance();
 	carMock = carMockInstance();
     	SR04_mock = SR04MockInstance();
+      motorsMock = motorsMockInstance();
     }
     // Run this after the tests
     virtual void TearDown()
@@ -38,6 +40,7 @@ public:
 	releaseGyroscopeMock();
     	releaseCarMock();
     	releaseSR04Mock();
+      releasemotorsMock();
     }
 };
 
@@ -56,10 +59,21 @@ public:
  * the car is in autonomous mode
  */
 TEST_F(MENACEFixture, goAuto_mode) {
-    EXPECT_CALL(*serialMock, read())
+    EXPECT_CALL(*SR04_mock, getDistance())
     .WillOnce(Return('a'));
     //tests if both motors have 100 for speed,which will make the car go forward
-    EXPECT_CALL(*carMock, getMotorSpeed(100,100));
+    EXPECT_CALL(*carMock, setMotorSpeed(100,100));
+    loop();
+}
+/*
+ * Checks when there is an Obstacle in front, when
+ * the car is in autonomous mode
+ */
+TEST_F(MENACEFixture, goAuto_mode) {
+    EXPECT_CALL(*SR04_mock, getDistance())
+    .WillOnce(Return("ObstacleFront is found, autonomous mode"));
+    EXPECT_CALL(*carMock, rotate(84)); // this checks the rotation angle
+    EXPECT_CALL(*carMock, stop()); // this checks if the car stops
     loop();
 }
 
