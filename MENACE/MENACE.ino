@@ -339,12 +339,12 @@ void modeSelection() {
       Serial.println("o");  // <-- To send 'o' to the pi
       delay(2000);
       readSerial();      // <-- To receive the info from the pi
+      delay(1500);
       Serial3.println(piInput);   // <-- To send the info to the app
       break;
 
     case 'w':            // <-- To break the identify red object
       Serial.println("w"); // <-- To send 'w' to the pi
-      delay(2000);
       break;
 
     default:             // <-- The manual mode is the default mode
