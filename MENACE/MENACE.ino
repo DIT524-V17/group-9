@@ -43,9 +43,9 @@ char piInput = 0;                   // <---- for the pi connection
 unsigned int tempSpeed = 0;         // <---- for setting the velocity
 int ledStateLeft = LOW;             // <---- led state used to set the LED
 int ledStateRight = LOW;            // <---- led state used to set the LED
-unsigned long intervalLeft = 1000;     // <---- interval to blink (milliseconds)
-unsigned long intervalRight = 1000;    // <---- interval to blink (milliseconds)
-unsigned long blinkDuration = 500;      // <---- number of millisecs that Led's are on - all three leds use this
+unsigned long intervalLeft = 1000;  // <---- interval to blink (milliseconds)
+unsigned long intervalRight = 1000; // <---- interval to blink (milliseconds)
+unsigned long blinkDuration = 500;  // <---- number of millisecs that Led's are on - all three leds use this
 unsigned long currentMillis = 0;    // <---- stores the value of millis() in each iteration of loop()
 unsigned long previousMillisL = 0;  // <---- to store last time LED at the left side was updated
 unsigned long previousMillisR = 0;  // <---- to store last time LED at the right side was updated
@@ -64,6 +64,7 @@ void setup() {
   /* Initialize the Bluetooth serial */
   Serial3.begin(9600);        // <--  Opens serial port to the App, set data rate to 9600 bps
   Serial.begin(9600);         // <--  Opens serial port to the Pi, set data rate to 9600 bps
+  
   /* Check if the front and back sensor and the gyroscope are attached to the Pin */
   sensorFront.attach(TRIGGER_PIN_F, ECHO_PIN_F);
   sensorBack.attach(TRIGGER_PIN_B, ECHO_PIN_B);
@@ -131,7 +132,6 @@ void blinkRight() {
   }
   digitalWrite(ledRight, ledStateRight);  // <-- Send the values to the digital pin
 }
-
 
 /* Method to turnOn the left light */
 void blinkLeft() {
@@ -336,14 +336,14 @@ void modeSelection() {
       break;
 
     case 'o':            // <-- Send 'o' to the Pi to idenfity red object
-      Serial.println("o");
+      Serial.println("o");  // <-- To send 'o' to the pi
       delay(2000);
-      readSerial(); //will receive the info from the pi
-      Serial3.println(piInput);
+      readSerial();      // <-- To receive the info from the pi
+      Serial3.println(piInput);   // <-- To send the info to the app
       break;
 
     case 'w':            // <-- To break the identify red object
-      Serial.println("w");
+      Serial.println("w"); // <-- To send 'w' to the pi
       delay(2000);
       break;
 
