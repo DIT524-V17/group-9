@@ -146,8 +146,8 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressLeft();
-                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnUp.setEnabled(true);
+                                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnLeft.setEnabled(true);
                             }
                         });
 
@@ -155,8 +155,8 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressRight();
-                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnUp.setEnabled(true);
+                                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnRight.setEnabled(true);
                             }
                         });
 
@@ -164,8 +164,8 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressDown();
-                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnUp.setEnabled(true);
+                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnDown.setEnabled(true);
                             }
                         });
                     }
@@ -182,8 +182,8 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressLeft();
-                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnDown.setEnabled(true);
+                                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnLeft.setEnabled(true);
                             }
                         });
 
@@ -191,8 +191,8 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressRight();
-                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnDown.setEnabled(true);
+                                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnRight.setEnabled(true);
                             }
                         });
 
@@ -200,8 +200,26 @@ public class ControlActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 pressUp();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
+                            }
+                        });
+                    }
+                    else {
+                        btnDown.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressDown();
                                 btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
                                 btnDown.setEnabled(true);
+                            }
+                        });
+                        btnUp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pressUp();
+                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                                btnUp.setEnabled(true);
                             }
                         });
                     }
