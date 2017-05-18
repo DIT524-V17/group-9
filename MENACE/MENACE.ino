@@ -1,8 +1,9 @@
 /**
    This sketch was created to control the robot car, initialize the serials attached on the car as the raspberry pi, sensors and bluetooth module.
-   There are data exchange between the pi and the mobile application (Andriod code).
-
-   @author - Nina (Version 1), Elham (Version 1 and 2), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
+   There are data exchange between the pi and the mobile application (Andriod code).The version described below 
+   were not related to sprints, they are related to versions delivered.
+    
+   @author - Nina (Version 1), Elham (Version 1), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
    @editor - Elham and Rema: Bluetooth connection with mobile application 
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
