@@ -308,7 +308,8 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
          */
         if (btSocket != null && isBtConnected) {
             try {
-                Log.e("tiltscreen", actionChar);
+                //Uncomment the line below to see the stream output.
+                //Log.e("tiltscreen", actionChar);
                 btSocket.getOutputStream().write(actionChar.getBytes());
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
