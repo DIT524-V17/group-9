@@ -113,6 +113,23 @@
            android:layout_height="47dp"
            android:orientation="horizontal">
 
+           <GridLayout
+               android:layout_width="162dp"
+               android:layout_height="match_parent"
+               android:layout_weight="0.08">
+
+           </GridLayout>
+
+           <Button
+               android:id="@+id/tilt"
+               style="@style/CustomButtonText"
+               android:layout_width="63dp"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right"
+               android:background="@drawable/custom_btn_blue"
+               android:text="Tilt"
+               android:layout_weight="0.04" />
+
        </LinearLayout>
 
         <TextView

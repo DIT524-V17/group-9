@@ -36,7 +36,7 @@ import java.util.UUID;
 public class ControlActivity extends AppCompatActivity {
 
     //Define buttons
-    Button btnBlink, btnJoystick;
+    Button btnBlink, btnJoystick, btnTilt;
     ImageButton btnUp, btnDown, btnStop, btnLeft, btnRight;
     ToggleButton autonomousSwitch, lightSwitch;
 
@@ -117,6 +117,7 @@ public class ControlActivity extends AppCompatActivity {
         btnStop = (ImageButton) findViewById(R.id.stop);
         btnBlink = (Button) findViewById(R.id.blink);
         btnJoystick = (Button) findViewById(R.id.joystick);
+        btnTilt  = (Button) findViewById(R.id.tilt);
 
         autonomousSwitch = (ToggleButton) findViewById(R.id.autonomous);
         lightSwitch = (ToggleButton) findViewById(R.id.light);
@@ -270,6 +271,9 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * This button opens the Joystick controls page.
+         */
         btnJoystick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,6 +285,28 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * This button opens the tilt controls page.
+         */
+        btnTilt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ControlActivity.this, TiltScreen.class);
+                i.putExtra("ADDRESS", address);
+                startActivity(i);
+                /**
+                 * Force all buffered data to be written out
+                 * before the output stream closes.
+                 */
+                try {
+                    btSocket.getOutputStream().flush();
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Output error.", Toast.LENGTH_SHORT).show();
+                }
+                Disconnect();
+                finish();
+            }
+        });
 
         autonomousSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -358,7 +384,7 @@ public class ControlActivity extends AppCompatActivity {
 
                                 //need a counter; after 3 pop the toast
 
-                                if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
+                                if (recDataString.charAt(0) == 'c') //if it starts with r we know it is what we are looking for
                                 {
                                     Toast.makeText(getApplicationContext(), "Red object detected.", Toast.LENGTH_SHORT).show();
                                 }

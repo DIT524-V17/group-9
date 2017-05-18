@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -222,6 +223,7 @@ public class JoystickScreen extends AppCompatActivity {
     private void setAction(String actionChar) {
         if (btSocket != null) {
             try {
+                Log.e("joystickscreen", actionChar);
                 btSocket.getOutputStream().write(actionChar.getBytes());
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
