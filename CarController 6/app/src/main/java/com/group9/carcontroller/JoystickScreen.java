@@ -223,7 +223,8 @@ public class JoystickScreen extends AppCompatActivity {
     private void setAction(String actionChar) {
         if (btSocket != null) {
             try {
-                Log.e("joystickscreen", actionChar);
+                //Uncomment the line below to see the stream output.
+                //Log.e("joystickscreen", actionChar);
                 btSocket.getOutputStream().write(actionChar.getBytes());
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
