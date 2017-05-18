@@ -21,18 +21,20 @@ import serial                             # Kosara's code
 import time                               # Kosara's code
 
 # Initializing the variables
+
 x = 'w' # A variable to break the condition
 ser = serial.Serial('/dev/ttyACM0', 9600) # Kosara's code
 
 # The code must run during the Arduino is on, waiting for a command from the user. 
 while 1:
         
-        x = ser.readline()                
+        x = ser.readline()          # Laiz' code - Check if the car sends a value
         print x                           
 
         if x != 'w': 
                 # Create Camera, set a resolution, save it and close the camera
                 camera = PiCamera()
+                camera.resolution = (100, 100)
                 image = camera.capture('/home/pi/Desktop/image.jpg')
                 camera.close()            # Laiz' code
                 
@@ -50,6 +52,7 @@ while 1:
                         # Color range for red       
                         ([17, 15, 100], [50, 56, 200])
                 ]
+                
                 # Loop over the boundaries
                 for (lower, upper) in boundaries:
                         # Create NumPy arrays from the boundaries
