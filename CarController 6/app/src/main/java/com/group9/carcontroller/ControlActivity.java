@@ -133,7 +133,7 @@ public class ControlActivity extends AppCompatActivity {
                     String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //append string
 
-                    if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
+                    if (recDataString.charAt(0) == 'c') //if it starts with c we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
 
