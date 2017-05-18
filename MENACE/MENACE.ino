@@ -96,7 +96,7 @@ void loop() {
       turnRight();
     }
 
-    moveCar(100, 100);        // <-- Car is always moving unless there is an obstacle in front
+    moveCar(50, 50);        // <-- Car is always moving unless there is an obstacle in front
     checkSerialInput();     // <-- Check for new input from the bluetooth
 
     /* Enter this section when in manual mode */
@@ -257,7 +257,7 @@ boolean ObstacleFront() {
     blinkAlert();   // <-- Call the method to make the lights blink
     stopCar();      // <-- Call the method to stop the car
 
-    output = 'r';
+    output = 'c';
     Serial3.println(output); // <-- Send the value 'r' to the application
 
     blinkOff();     // <-- Call the method to stop blinking
@@ -296,13 +296,13 @@ void goManual() {
 
   if (input == 'f') {       // <-- Check the user command to drive forwards
     if (canDriveForward) {  // <-- Perform an obstacle check before driving
-      moveCar(100, 100);
+      moveCar(50, 50);
     }
   }
 
   if (input == 'b') {        // <-- Check the user command to drive backwards
     if (canDriveBackward) {  // <-- Perform an obstacle check before driving
-      goBack(100, 100);
+      goBack(50, 50);
     }
   }
 
