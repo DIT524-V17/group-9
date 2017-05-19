@@ -4,7 +4,7 @@ package com.group9.carcontroller;
  * This class allows the user to control the car
  * remotely tilting their phone.
  *
- * Created by Kosara Golemshinska.
+ * @author Kosara Golemshinska
  */
 
 import android.app.ProgressDialog;
@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class TiltScreen extends AppCompatActivity implements SensorEventListener {
 
-    /**
+    /*
      * Declare the sensor, UI and Bluetooth
      * connection elements.
      */
@@ -62,19 +62,19 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         Intent newint = getIntent();
         address = newint.getStringExtra("ADDRESS");
 
-        /**
+        /*
          * Call the class to connect.
          */
         new TiltScreen.ConnectBT().execute();
 
-        /**
+        /*
          * Connect the buttons to the UI.
          */
         btnBlink = (Button) findViewById(R.id.blinkLights);
         btnStop = (Button) findViewById(R.id.stopCar);
         btnBack = (Button) findViewById(R.id.goBack);
 
-        /**
+        /*
          * Below, are the blink and stop buttons,
          * as well as the button that returns to the
          * previous activity.
@@ -104,24 +104,24 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
             }
         }));
 
-        /**
+        /*
          * Retrieve accelerometer data using the sensor manager.
          */
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        /**
+        /*
          * Register a listener to monitor the accelerometer.
          */
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL, Handler);
 
-        /**
+        /*
          * Initialize and start the worker thread.
          */
         HandlerThread = new HandlerThread("Worker Thread");
         HandlerThread.start();
 
-        /**
+        /*
          * Initialize the handler and post the UI element changes to it.
          */
         Handler = new Handler(HandlerThread.getLooper());
@@ -129,7 +129,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
 
     }
 
-    /**
+    /*
      * Send the connection between the accelerometer
      * data and the UI to the Handler.
      */
@@ -152,7 +152,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         }
     };
 
-    /**
+    /*
      * Register the sensor manager listener
      * every time the activity is resumed.
      */
@@ -160,18 +160,18 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
     protected void onResume() {
         super.onResume();
         try {
-            /**
+            /*
              * Register a listener to monitor the accelerometer.
              */
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL, Handler);
 
-            /**
+            /*
              * Initialize and start the worker thread.
              */
             HandlerThread = new HandlerThread("Worker Thread");
             HandlerThread.start();
 
-            /**
+            /*
              * Initialize the handler and post the UI element changes to it.
              */
             Handler = new Handler(HandlerThread.getLooper());
@@ -182,7 +182,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
-    /**
+    /*
      * Unregister the sensor manager listener
      * every time the activity is paused.
      */
@@ -190,7 +190,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
     protected void onPause() {
         super.onPause();
         try {
-            /**
+            /*
              * Unregister the accelerometer listener and quit the thread safely.
              */
             mSensorManager.unregisterListener(this);
@@ -201,7 +201,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
-    /**
+    /*
      * This method is left blank intentionally.
      * @param sensor
      * @param accuracy
@@ -210,7 +210,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    /**
+    /*
      * This method selects a character to send
      * to the car based on the angle the phone is in.
      * @param event
@@ -220,7 +220,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         float x = event.values[0];
         float y = event.values[1];
         if (Math.abs(x) > Math.abs(y)) {
-            /**
+            /*
              * Turn right.
              */
             if (x < 0) {
@@ -229,7 +229,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
                 txt.setText("Right");
 
             }
-            /**
+            /*
              * Turn left.
              */
             if (x > 0) {
@@ -239,7 +239,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
 
             }
         }
-        /**
+        /*
          * Move forward.
          */
         else {
@@ -249,7 +249,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
                 txt.setText("Forth");
 
             }
-            /**
+            /*
              * Move backwards.
              */
             if (y > 0) {
@@ -259,7 +259,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
 
             }
         }
-        /**
+        /*
          * If the phone is lying flat, i.e.,
          * it's not tilted, stop the car.
          */
@@ -295,13 +295,13 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         finish(); //return to the first layout
     }
 
-    /**
+    /*
      * This method sends the appropriate character
      * to the Bluetooth Serial port of the car.
      * @param actionChar
      */
     private void setAction(String actionChar) {
-        /**
+        /*
          * If the connections is successful,
          * write the appropriate character to
          * the Bluetooth of the Arduino.
@@ -317,7 +317,7 @@ public class TiltScreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
-    /**
+    /*
      * This class handles the Bluetooth connection
      * to the car.
      */

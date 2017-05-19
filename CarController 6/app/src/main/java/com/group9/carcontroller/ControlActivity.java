@@ -7,6 +7,7 @@
  * @author Isak
  * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
  * @author Nina Uljanic : lines 136-137, 341, 355-391
+ * @author Kosara : lines 120-121, 227-261
  */
 package com.group9.carcontroller;
 
@@ -223,7 +224,7 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
-        /**
+        /*
          * This button opens the Joystick controls page.
          */
         btnJoystick.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +238,7 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
-        /**
+        /*
          * This button opens the tilt controls page.
          */
         btnTilt.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +247,7 @@ public class ControlActivity extends AppCompatActivity {
                 Intent i = new Intent(ControlActivity.this, TiltScreen.class);
                 i.putExtra("ADDRESS", address);
                 startActivity(i);
-                /**
+                /*
                  * Force all buffered data to be written out
                  * before the output stream closes.
                  */

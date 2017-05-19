@@ -1,7 +1,10 @@
 package com.group9.carcontroller;
 
 /**
- * Created by Kosara Golemshinska.
+ * This class allows the user to control the
+ * car remotely using a virtual joystick.
+ *
+ * @author Kosara Golemshinska
  */
 
 import android.app.ProgressDialog;
@@ -24,7 +27,7 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public class JoystickScreen extends AppCompatActivity {
 
-    /**
+    /*
      * Declare the UI and the Bluetooth
      * connection elements.
      */
@@ -40,7 +43,7 @@ public class JoystickScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joystickscreen);
 
-        /**
+        /*
          * Add a delay of 1,5 seconds before the
          * activity starts.
          */
@@ -68,19 +71,19 @@ public class JoystickScreen extends AppCompatActivity {
 
         new ConnectBT().execute(); //Call the class to connect
 
-        /**
+        /*
          * Connect the buttons to the UI.
          */
         btnBlink = (Button) findViewById(R.id.blinkLights);
         btnStop = (Button) findViewById(R.id.stopCar);
         btnBack = (Button) findViewById(R.id.goBack);
 
-        /**
+        /*
          * Initialize the joystick object.
          */
         JoystickView joystick = (JoystickView) findViewById(R.id.joystickView);
 
-        /**
+        /*
          * Depending on the angle, the app
          * sends certain instructions to the car.
          */
@@ -91,7 +94,7 @@ public class JoystickScreen extends AppCompatActivity {
                 if((angle == 0) || (angle == 315)|| (angle == 360) ||
                         (angle > 0 && angle < 45) || (angle > 315 && angle < 360)){
 
-                    /**
+                    /*
                      * Turn right.
                      */
                     setAction("r");
@@ -105,7 +108,7 @@ public class JoystickScreen extends AppCompatActivity {
                     }, 2000); // Delays action for 2 seconds (2000 milliseconds)
 
                 }
-                /**
+                /*
                  * Move forward.
                  */
                 else if((angle == 45) || (angle > 45 && angle < 135)) {
@@ -122,7 +125,7 @@ public class JoystickScreen extends AppCompatActivity {
 
                 }
 
-                /**
+                /*
                  * Turn left.
                  */
                 else if((angle == 135) || (angle > 135 && angle < 225)) {
@@ -138,7 +141,7 @@ public class JoystickScreen extends AppCompatActivity {
                     }, 2000); // Delays action for 2 seconds (2000 milliseconds)
 
                 }
-                /**
+                /*
                  * Move backwards.
                  */
                 else if((angle == 225) || (angle > 225 && angle < 315)) {
@@ -156,7 +159,7 @@ public class JoystickScreen extends AppCompatActivity {
             }
         });
 
-        /**
+        /*
          * Below, are the blink and stop buttons,
          * as well as the button that returns to the
          * previous activity.
@@ -215,7 +218,7 @@ public class JoystickScreen extends AppCompatActivity {
         finish(); //return to the first layout
     }
 
-    /**
+    /*
      * This method sends the appropriate character
      * to the Bluetooth Serial port of the car.
      * @param actionChar
@@ -232,7 +235,7 @@ public class JoystickScreen extends AppCompatActivity {
         }
     }
 
-    /**
+    /*
      * This class handles the Bluetooth connection
      * to the car.
      */
