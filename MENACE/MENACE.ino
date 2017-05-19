@@ -8,6 +8,7 @@
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
    @editor - Nina: Serial connection with the pi to send the data when the red object is faced to the App.
+   @editor - Melinda and Nina: expanded the methods for registering front and back obstacle to fit the needs of the app.
    
 **/
 
@@ -39,6 +40,7 @@ const int ledLeft = 49;       // <---- the number of the LED pin
 */
 char input = 0;                     // <---- for the bluetooth connection
 char output = 0;                    // <---- for the bluetooth connection
+char outputN= 0;
 char piInput = 0;                   // <---- for the pi connection
 unsigned int tempSpeed = 0;         // <---- for setting the velocity
 int ledStateLeft = LOW;             // <---- led state used to set the LED
@@ -258,12 +260,16 @@ boolean ObstacleFront() {
     stopCar();      // <-- Call the method to stop the car
 
     output = 'c';
-    Serial3.println(output); // <-- Send the value 'r' to the application
+    Serial3.println(output); // <-- Send the value 'c' to the application
 
     blinkOff();     // <-- Call the method to stop blinking
     return true;
   }
-  return false;
+  else {
+    output = 'x';
+    Serial3.println(output);
+    return false;
+  }  
 }
 
 /* Checks the back sensor readings for obstacles, blink the light and stop the car */
@@ -273,13 +279,18 @@ boolean ObstacleBack() {
     blinkAlert();   // <-- Call the method to make the lights blink
     stopCar();      // <-- Call the method to stop the car
 
-    output = 't';
-    Serial3.println(output); // <-- Send the value 't' to the application
+    outputN = 't';
+    Serial3.println(outputN); // <-- Send the value 't' to the application
 
     blinkOff();     // <-- Call the method to stop blinking
     return true;
   }
-  return false;
+  else {
+    outputN = 'u';
+    delay(50);
+    Serial3.println(outputN);
+    return false;
+  }
 }
 
 /*===============================================
