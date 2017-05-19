@@ -128,6 +128,43 @@ public class ControlActivity extends AppCompatActivity {
         piCamText = (TextView) findViewById(R.id.piCam);
         piCamText.setVisibility(View.GONE);
 
+        btnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressLeft();
+                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                btnLeft.setEnabled(true);
+            }
+        });
+
+        btnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressRight();
+                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                btnRight.setEnabled(true);
+            }
+        });
+
+        btnDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressDown();
+                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                btnDown.setEnabled(true);
+            }
+        });
+
+        btnUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressUp();
+
+                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+                btnUp.setEnabled(true);
+            }
+        });
+
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == handlerState) { //if message is what we want
@@ -139,35 +176,10 @@ public class ControlActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
-                        btnUp.setEnabled(false);
+                        btnUp.setEnabled(true);
                         btnUp.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
 
-                        btnLeft.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressLeft();
-                                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnLeft.setEnabled(true);
-                            }
-                        });
 
-                        btnRight.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressRight();
-                                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnRight.setEnabled(true);
-                            }
-                        });
-
-                        btnDown.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressDown();
-                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnDown.setEnabled(true);
-                            }
-                        });
                     }
 
                     if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
@@ -175,54 +187,12 @@ public class ControlActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
-                        btnDown.setEnabled(false);
+                        btnDown.setEnabled(true);
                         btnDown.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
 
-                        btnLeft.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressLeft();
-                                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnLeft.setEnabled(true);
-                            }
-                        });
 
-                        btnRight.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressRight();
-                                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnRight.setEnabled(true);
-                            }
-                        });
+                    }
 
-                        btnUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressUp();
-                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnUp.setEnabled(true);
-                            }
-                        });
-                    }
-                    else {
-                        btnDown.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressDown();
-                                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnDown.setEnabled(true);
-                            }
-                        });
-                        btnUp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                pressUp();
-                                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                                btnUp.setEnabled(true);
-                            }
-                        });
-                    }
                     recDataString.delete(0, recDataString.length()); //clear all string data
                 }
             }
