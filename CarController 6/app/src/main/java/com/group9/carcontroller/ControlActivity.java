@@ -128,12 +128,12 @@ public class ControlActivity extends AppCompatActivity {
         piCamText = (TextView) findViewById(R.id.piCam);
         piCamText.setVisibility(View.GONE);
 
+        enableKeys();
+
         btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pressLeft();
-                btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                btnLeft.setEnabled(true);
             }
         });
 
@@ -141,8 +141,6 @@ public class ControlActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pressRight();
-                btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                btnRight.setEnabled(true);
             }
         });
 
@@ -150,8 +148,6 @@ public class ControlActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pressDown();
-                btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                btnDown.setEnabled(true);
             }
         });
 
@@ -159,9 +155,6 @@ public class ControlActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pressUp();
-
-                btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
-                btnUp.setEnabled(true);
             }
         });
 
@@ -171,64 +164,35 @@ public class ControlActivity extends AppCompatActivity {
                     String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //append string
 
+                    System.out.println(recDataString.charAt(0));
                     if (recDataString.charAt(0) == 'c') //if it starts with c we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
-                        btnUp.setEnabled(true);
-                        btnUp.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
-
-
+                        disableKey(btnUp);
                     }
 
-                    if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
+                    else if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
-                        btnDown.setEnabled(true);
-                        btnDown.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+                        disableKey(btnDown);
+                    }
 
+                    else if (recDataString.charAt(0) == 'x'){
+                        enableKey(btnUp);
+                    }
 
+                    else if (recDataString.charAt(0) == 'u'){
+                        enableKey(btnDown);
                     }
 
                     recDataString.delete(0, recDataString.length()); //clear all string data
                 }
             }
         };
-
-        btnUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pressUp();
-            }
-        });
-
-
-        btnDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pressDown();
-            }
-        });
-
-        btnLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pressLeft();
-            }
-        });
-
-        btnRight.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                pressRight();
-            }
-        });
-
-
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -596,10 +560,39 @@ public class ControlActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    /**
+     * @authod Nina & Melinda
+     */
+
+    public void enableKeys() {
+
+        btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnLeft.setEnabled(true);
+
+        btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnRight.setEnabled(true);
+
+        btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnUp.setEnabled(true);
+
+        btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnDown.setEnabled(true);
 
     }
 
+    public void disableKey(ImageButton key){
+        key.setEnabled(false);
+        key.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void enableKey(ImageButton key){
+        key.setEnabled(true);
+        key.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+    }
 }
+
 
 
 
