@@ -94,7 +94,7 @@ void loop() {
   /* Enter this section when in autonomous mode */
   if (goAuto1 == true) {
 
-    if (ObstacleFront()) {  //< -- Always check for obstacle and act accordingly
+    if (obstacleFront()) {  //< -- Always check for obstacle and act accordingly
       turnRight();
     }
 
@@ -107,8 +107,8 @@ void loop() {
     /* The car proccess the commands from user but stops in case of obstacle */
 
     delay(1000);
-    ObstacleF();            // <-- Check allways the obstacle in the front
-    ObstacleB();            // <-- Check allways the obstacle in the back
+    obstacleF();            // <-- Check allways the obstacle in the front
+    obstacleB();            // <-- Check allways the obstacle in the back
 
   }
 }
@@ -232,9 +232,9 @@ void goBack(int tempSpeedL, int tempSpeedR) {
 */
 
 /* Check for front obstacles */
-void ObstacleF() {
+void obstacleF() {
 
-  if (ObstacleFront()) {      // <-- If there is an obstacle in the front of the car, don't allow the car to moves forward
+  if (obstacleFront()) {      // <-- If there is an obstacle in the front of the car, don't allow the car to moves forward
     canDriveForward = false;
   } else {                    // <-- If there isn't an obstacle in the front of the car, allow the car to moves forward
     canDriveForward = true;
@@ -242,9 +242,9 @@ void ObstacleF() {
 }
 
 /* Check for back obstacles */
-void ObstacleB() {
+void obstacleB() {
 
-  if (ObstacleBack()) {       // <-- If there is an obstacle in the back of the car, don't allow the car to moves backward
+  if (obstacleBack()) {       // <-- If there is an obstacle in the back of the car, don't allow the car to moves backward
     canDriveBackward = false;
   } else {                    // <-- If there isn't an obstacle in the back of the car, allow the car to moves backward
     canDriveBackward = true;
@@ -252,7 +252,7 @@ void ObstacleB() {
 }
 
 /* Checks the front sensor readings for obstacles, blink the light and stop the car */
-boolean ObstacleFront() {
+boolean obstacleFront() {
 
   distanceObF = sensorFront.getDistance();
   if (distanceObF > 0 && distanceObF < 30) { // <-- If an obstacle in the front is found perform accordly
@@ -273,7 +273,7 @@ boolean ObstacleFront() {
 }
 
 /* Checks the back sensor readings for obstacles, blink the light and stop the car */
-boolean ObstacleBack() {
+boolean obstacleBack() {
   distanceObB = sensorBack.getDistance();
   if (distanceObB > 0 && distanceObB < 30) { // <-- If an obstacle in the back is found perform accordly
     blinkAlert();   // <-- Call the method to make the lights blink
