@@ -47,8 +47,8 @@ public:
     EXPECT_CALL(*carMock, begin());        // Pass the gyroscope as an argument
     InSequence seq;
     // Everything below this has to happen in the specific sequence
-    EXPECT_CALL(*SR04_mock, attach(51, 50)); // front Sensor
-    EXPECT_CALL(*SR04_mock, attach(45, 44)); // back Sensor
+    EXPECT_CALL(*SR04_mock, attach(TRIGGER_PIN_F, ECHO_PIN_F)); // front Sensor
+    EXPECT_CALL(*SR04_mock, attach(TRIGGER_PIN_B, ECHO_PIN_B)); // back Sensor
     setup();
 }
 /* checks the forward movment of the car,
