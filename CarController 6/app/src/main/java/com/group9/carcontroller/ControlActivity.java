@@ -6,7 +6,7 @@
  *
  * @author Isak
  * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
- * @author Nina Uljanic : lines 136-137, 341, 355-391
+ * @author Nina Uljanic : lines 136-137, 341, 355-391, 556-586
  * @author Kosara : lines 120-121, 227-261
  */
 package com.group9.carcontroller;
@@ -137,21 +137,18 @@ public class ControlActivity extends AppCompatActivity {
                 pressLeft();
             }
         });
-
         btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pressRight();
             }
         });
-
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pressDown();
             }
         });
-
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,21 +169,15 @@ public class ControlActivity extends AppCompatActivity {
 
                         /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
                         disableKey(btnUp);
-                    }
-
-                    else if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
+                    } else if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
                         disableKey(btnDown);
-                    }
-
-                    else if (recDataString.charAt(0) == 'x'){
+                    } else if (recDataString.charAt(0) == 'x') {
                         enableKey(btnUp);
-                    }
-
-                    else if (recDataString.charAt(0) == 'u'){
+                    } else if (recDataString.charAt(0) == 'u') {
                         enableKey(btnDown);
                     }
 
@@ -227,6 +218,7 @@ public class ControlActivity extends AppCompatActivity {
         /*
          * This button opens the Joystick controls page.
          */
+
         btnJoystick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -337,7 +329,7 @@ public class ControlActivity extends AppCompatActivity {
 
                                 //need a counter; after 3 pop the toast
 
-                                if (recDataString.charAt(0) == 'c') //if it starts with r we know it is what we are looking for
+                                if (recDataString.charAt(0) == 'z') //if it starts with r we know it is what we are looking for
                                 {
                                     Toast.makeText(getApplicationContext(), "Red object detected.", Toast.LENGTH_SHORT).show();
                                 }
