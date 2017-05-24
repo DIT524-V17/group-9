@@ -41,13 +41,18 @@ void modeSelection() {
       delay(2000);
       readSerial();      // <-- To receive the info from the pi
       delay(1500);
+      Serial.end();
+
+      delay(1500);
+      
+      Serial3.begin(9600);
       Serial3.println(piInput);   // <-- To send the info to the app
+      delay(1500);
+    //Serial3.end();
       break;
 
     case 'w':            // <-- To break the identify red object
-    Serial.begin(9600);
-    val = 2;
-      Serial.println(val); // <-- To send 'w' to the pi
+    
       break;
 
 }
