@@ -37,7 +37,7 @@ import java.util.UUID;
 public class ControlActivity extends AppCompatActivity {
 
     //Define buttons
-    Button btnBlink, btnJoystick, btnTilt;
+    Button btnBlink;
     ImageButton btnUp, btnDown, btnStop, btnLeft, btnRight;
     ToggleButton autonomousSwitch, lightSwitch;
 
@@ -117,8 +117,6 @@ public class ControlActivity extends AppCompatActivity {
         btnRight = (ImageButton) findViewById(R.id.right);
         btnStop = (ImageButton) findViewById(R.id.stop);
         btnBlink = (Button) findViewById(R.id.blink);
-        btnJoystick = (Button) findViewById(R.id.joystick);
-        btnTilt  = (Button) findViewById(R.id.tilt);
 
         autonomousSwitch = (ToggleButton) findViewById(R.id.autonomous);
         lightSwitch = (ToggleButton) findViewById(R.id.light);
@@ -219,7 +217,7 @@ public class ControlActivity extends AppCompatActivity {
          * This button opens the Joystick controls page.
          */
 
-        btnJoystick.setOnClickListener(new View.OnClickListener() {
+        /*btnJoystick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ControlActivity.this, JoystickScreen.class);
@@ -228,12 +226,12 @@ public class ControlActivity extends AppCompatActivity {
                 Disconnect();
                 finish();
             }
-        });
+        }); */
 
         /*
          * This button opens the tilt controls page.
          */
-        btnTilt.setOnClickListener(new View.OnClickListener() {
+      /*  btnTilt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ControlActivity.this, TiltScreen.class);
@@ -243,7 +241,7 @@ public class ControlActivity extends AppCompatActivity {
                  * Force all buffered data to be written out
                  * before the output stream closes.
                  */
-                try {
+              /*  try {
                     btSocket.getOutputStream().flush();
                 } catch (IOException e) {
                     Toast.makeText(getApplicationContext(), "Output error.", Toast.LENGTH_SHORT).show();
@@ -251,7 +249,8 @@ public class ControlActivity extends AppCompatActivity {
                 Disconnect();
                 finish();
             }
-        });
+        }); */
+
 
         autonomousSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
