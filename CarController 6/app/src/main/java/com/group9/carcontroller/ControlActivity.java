@@ -6,7 +6,7 @@
  *
  * @author Isak : lines 525-558, 157-177, 187
  * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
- * @author Nina Uljanic : lines 136-137, 341, 355-391, 556-586
+ * @author Nina Uljanic : lines 176-191, 333-350, 577-600, and various minor modifications
  * @author Kosara : lines 120-121, 227-261
  */
 package com.group9.carcontroller;
@@ -154,6 +154,16 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * @author: Melinda
+         * @editor: Nina - modified the nested if statement
+         *
+         * Reads input sent from the Arduino, and enters the corresponding if statement.
+         * If there is an obstacle detected, it disables the buttons facing that direction.
+         * If the obstacle moves out of the sensors' sight on its own, the buttons are
+         * enabled again.
+         */
+
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 //If message is what we want
@@ -163,26 +173,23 @@ public class ControlActivity extends AppCompatActivity {
                     //Append string
                     recDataString.append(readMessage);
 
-                    System.out.println(recDataString.charAt(0));
-                    //If it starts with c we know it is what we are looking for
-                    if (recDataString.charAt(0) == 'c')
-                    {
+                    if (recDataString.charAt(0) == 'c') {       //if c is received, there is an obstacle in front
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+                        disableKey(btnUp);      //Disabling and changing the colour of the up arrow when there's an obstacle ahead
 
-                        /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
-                        disableKey(btnUp);
-                        //If it starts with t we know it is what we are looking for
-                    } else if (recDataString.charAt(0) == 't')
-                    {
-                        Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
-
+                    } else if (recDataString.charAt(0) == 't') { //if t is received, there is an obstacle behind
+                        Toast.makeText(getApplicationContext(), "Obstacle is behind", Toast.LENGTH_SHORT).show();
                         /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
                         disableKey(btnDown);
-                    } else if (recDataString.charAt(0) == 'x') {
+
+                    } else if (recDataString.charAt(0) == 'x') { //if x is received, there is no obstacle in front
                         enableKey(btnUp);
-                    } else if (recDataString.charAt(0) == 'u') {
+
+                    } else if (recDataString.charAt(0) == 'u') { //if u is received, there is no obstacle behind
                         enableKey(btnDown);
+
                     }
+
                     //clear all string data
                     recDataString.delete(0, recDataString.length());
                 }
@@ -314,32 +321,30 @@ public class ControlActivity extends AppCompatActivity {
                     setAction("o");
 
                     /**
-                     * Nina Uljanic
+                     * @author: Nina Uljanic
                      * SEM V17
                      * group-9 : MENACE
                      * 11.05.2017.
+                     *
+                     * Reads input received from the Arduino and pops a toast about the status of
+                     * the camera - whether a red object has been detected or not.
                      */
 
                     //Add the picture/text and the toasts: there is an object and there is not
                     piCamText.setVisibility(View.VISIBLE);
 
                     //Await data from the car
-
                     bluetoothIn = new Handler() {
                         public void handleMessage(android.os.Message msg) {
                             if (msg.what == handlerState) { //if message is what we want
                                 String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
                                 recDataString.append(readMessage); //append string
 
-                                //need a counter; after 3 pop the toast
-
-                                if (recDataString.charAt(0) == 'z') //if it starts with r we know it is what we are looking for
-                                {
+                                if (recDataString.charAt(0) == 'z'){ //if z is received, a red object has been detected
                                     Toast.makeText(getApplicationContext(), "Red object detected.", Toast.LENGTH_SHORT).show();
                                 }
 
-                                if (recDataString.charAt(0) == 'n') //if it starts with t we know it is what we are looking for
-                                {
+                                if (recDataString.charAt(0) == 'n'){ //if n is received, no red object has been detected
                                     Toast.makeText(getApplicationContext(), "No red object detected.", Toast.LENGTH_SHORT).show();
                                 }
                                 recDataString.delete(0, recDataString.length()); //clear all string data
@@ -565,6 +570,8 @@ public class ControlActivity extends AppCompatActivity {
 
     /**
      * @authod Nina & Melinda
+     *
+     * A method to enable all keys and methods to enable or disable a specific key.
      */
 
     public void enableKeys() {
