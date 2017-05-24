@@ -4,7 +4,7 @@
  * and light recognition mode on/off, a button for switching to joystick
  * mode and a button for making the car lights blink.
  *
- * @author Isak
+ * @author Isak : lines 525-558, 157-177, 187
  * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
  * @author Nina Uljanic : lines 136-137, 341, 355-391, 556-586
  * @author Kosara : lines 120-121, 227-261
@@ -156,18 +156,23 @@ public class ControlActivity extends AppCompatActivity {
 
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
-                if (msg.what == handlerState) { //if message is what we want
-                    String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
-                    recDataString.append(readMessage); //append string
+                //If message is what we want
+                if (msg.what == handlerState) {
+                    //Msg.arg1 = bytes from connect thread
+                    String readMessage = (String) msg.obj;
+                    //Append string
+                    recDataString.append(readMessage);
 
                     System.out.println(recDataString.charAt(0));
-                    if (recDataString.charAt(0) == 'c') //if it starts with c we know it is what we are looking for
+                    //If it starts with c we know it is what we are looking for
+                    if (recDataString.charAt(0) == 'c')
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
 
                         /*Disabling and changing the colour of the up arrow when there's an obstacle ahead*/
                         disableKey(btnUp);
-                    } else if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
+                        //If it starts with t we know it is what we are looking for
+                    } else if (recDataString.charAt(0) == 't')
                     {
                         Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
 
@@ -178,8 +183,8 @@ public class ControlActivity extends AppCompatActivity {
                     } else if (recDataString.charAt(0) == 'u') {
                         enableKey(btnDown);
                     }
-
-                    recDataString.delete(0, recDataString.length()); //clear all string data
+                    //clear all string data
+                    recDataString.delete(0, recDataString.length());
                 }
             }
         };
@@ -518,6 +523,9 @@ public class ControlActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @author Isak Magnusson
+     */
 
     //create new class for connect thread
     private class ConnectedThread extends Thread {
@@ -543,7 +551,8 @@ public class ControlActivity extends AppCompatActivity {
             // Keep looping to listen for received messages
             while (true) {
                 try {
-                    bytes = mmInStream.read(buffer); //read bytes from input buffer
+                    //Read bytes from input buffer
+                    bytes = mmInStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
                     // Send the obtained bytes to the UI Activity via handler
                     bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();

@@ -59,13 +59,7 @@ public class MainActivity extends AppCompatActivity {
         devicelist.setVisibility(View.GONE);
 
 
-        /*
-        * Checking if the device have a bluetooth device, when the application is launched
-        * and Turn on the bluetooth if so..
-        * Check  turnOnBluetooth() and checkAndRequestPermissions()
-        * REQUIRES : BLUETOOTH_ADMIN permission
-        * */
-
+        //Takes you to the settings page
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -76,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        /*
+        * Checking if the device have a bluetooth device, when the application is launched
+        * and Turn on the bluetooth if so..
+        * Check  turnOnBluetooth() and checkAndRequestPermissions()
+        * REQUIRES : BLUETOOTH_ADMIN permission
+        * */
 
         /* Ask for the "Critical" permissions, in Marshmallow*/
         if (android.os.Build.VERSION.SDK_INT >= 23) {
