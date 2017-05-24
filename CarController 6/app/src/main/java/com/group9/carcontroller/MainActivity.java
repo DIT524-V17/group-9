@@ -33,7 +33,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnList, btnPair;
+    Button btnList, btnPair, btnSettings;
     ListView devicelist;
     private BluetoothAdapter myBluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         // Connect buttons to GUI
         btnList = (Button) findViewById(R.id.btnListCars);
         btnPair = (Button) findViewById(R.id.pairCar);
+        btnSettings = (Button)findViewById(R.id.settingsID);
+
         devicelist = (ListView) findViewById(R.id.listView);
         devicelist.setVisibility(View.GONE);
 
@@ -63,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         * Check  turnOnBluetooth() and checkAndRequestPermissions()
         * REQUIRES : BLUETOOTH_ADMIN permission
         * */
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
+
+            }
+        });
 
         /* Ask for the "Critical" permissions, in Marshmallow*/
         if (android.os.Build.VERSION.SDK_INT >= 23) {
