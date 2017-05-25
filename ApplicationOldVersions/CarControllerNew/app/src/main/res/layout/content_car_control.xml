@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.group9.carcontroller.CarControl"
+    tools:showIn="@layout/activity_car_control">
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forward"
+        app:layout_constraintRight_toLeftOf="@+id/right"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="62dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Left"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="181dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="@+id/backwards"
+        android:layout_marginEnd="54dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="102dp"
+        android:layout_marginBottom="102dp"
+        app:layout_constraintTop_toTopOf="@+id/forward"
+        android:layout_marginRight="54dp"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/backwards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Backwards"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="37dp"
+        app:layout_constraintTop_toBottomOf="@+id/left"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/left" />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alert"
+        app:layout_constraintRight_toLeftOf="@+id/automatic"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="18dp" />
+
+    <Button
+        android:id="@+id/automatic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Automatic"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="18dp" />
+</android.support.constraint.ConstraintLayout>

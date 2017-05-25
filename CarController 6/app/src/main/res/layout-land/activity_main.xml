@@ -12,6 +12,18 @@
     tools:context="com.group9.carcontroller.MainActivity"
     android:background="@drawable/googra">
 
+    <Button
+        android:id="@+id/settingsID"
+        style="@style/CustomButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/linearLayout"
+        android:layout_weight="1"
+        android:background="@drawable/custom_btn_blue"
+        android:text="Settings" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"

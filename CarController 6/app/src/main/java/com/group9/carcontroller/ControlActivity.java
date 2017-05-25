@@ -1,3 +1,14 @@
+/**
+ * Class with all the main functions of the applications,
+ * e.g. control buttons for manual mode, buttons for turning autonomous
+ * and light recognition mode on/off, a button for switching to joystick
+ * mode and a button for making the car lights blink.
+ *
+ * @author Isak : lines 525-558, 157-177, 187
+ * @author Melinda : lines 140-169, 176-205, putting the handling of button presses in separate methods: 212-240, 393-474
+ * @author Nina Uljanic : lines 176-191, 333-350, 577-600, and various minor modifications
+ * @author Kosara : lines 120-121, 227-261
+ */
 package com.group9.carcontroller;
 
 import android.app.ProgressDialog;
@@ -5,24 +16,20 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -30,13 +37,13 @@ import java.util.UUID;
 public class ControlActivity extends AppCompatActivity {
 
     //Define buttons
-    Button btnBlink, btnJoystick;
+    Button btnBlink;
     ImageButton btnUp, btnDown, btnStop, btnLeft, btnRight;
-    ToggleButton autonomousSwich, lightSwitch;
+    ToggleButton autonomousSwitch, lightSwitch;
 
     boolean autonomousOn, followLightOn;
 
-    TextView autoText, lightText;
+    TextView autoText, lightText, piCamText;
 
     private ConnectedThread mConnectedThread;
 
@@ -66,17 +73,14 @@ public class ControlActivity extends AppCompatActivity {
 
                 carControl();
 
-
             }
         }, 1500); // Delays action for 1,5 seconds (1500 milliseconds)
-
     }
 
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -85,9 +89,7 @@ public class ControlActivity extends AppCompatActivity {
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.activity_control);
         }
-
         carControl();
-
     }
 
 
@@ -104,11 +106,9 @@ public class ControlActivity extends AppCompatActivity {
         autonomousOn = false;
         followLightOn = false;
 
-
         //Call the class to connect
             /*We need an Asynchronous class to connect to not block te main thread(the Activity)*/
         new ConnectBT().execute();
-
 
         // Connect button to GUI
         btnUp = (ImageButton) findViewById(R.id.up);
@@ -117,134 +117,85 @@ public class ControlActivity extends AppCompatActivity {
         btnRight = (ImageButton) findViewById(R.id.right);
         btnStop = (ImageButton) findViewById(R.id.stop);
         btnBlink = (Button) findViewById(R.id.blink);
-        btnJoystick = (Button) findViewById(R.id.joystick);
 
-        autonomousSwich = (ToggleButton) findViewById(R.id.autonomous);
+        autonomousSwitch = (ToggleButton) findViewById(R.id.autonomous);
         lightSwitch = (ToggleButton) findViewById(R.id.light);
 
         lightText = (TextView) findViewById(R.id.lightTextID);
         autoText = (TextView) findViewById(R.id.autoTextID);
 
+        piCamText = (TextView) findViewById(R.id.piCam);
+        piCamText.setVisibility(View.GONE);
 
-        bluetoothIn = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                if (msg.what == handlerState) { //if message is what we want
-                    String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
-                    recDataString.append(readMessage); //append string
+        enableKeys();
 
-
-                    if (recDataString.charAt(0) == 'r') //if it starts with r we know it is what we are looking for
-                    {
-
-                        Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (recDataString.charAt(0) == 't') //if it starts with t we know it is what we are looking for
-                    {
-
-                        Toast.makeText(getApplicationContext(), "Obstacle is in back", Toast.LENGTH_SHORT).show();
-
-                    }
-                    recDataString.delete(0, recDataString.length()); //clear all string data
-
-                }
-            }
-        };
-
-        btnUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAction("f");
-                btnUp.setImageResource(R.drawable.uparrowclicked);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        setAction("q"); // Sends q after 2 seconds to stop car
-                        btnUp.setImageResource(R.drawable.uparrow);
-
-                    }
-                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
-            }
-        });
-
-
-        btnDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setAction("b");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrowclicked);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        setAction("q"); // Sends q after 2 seconds to stop car
-                        btnDown.setImageResource(R.drawable.downarrow);
-
-                    }
-                }, 2000); // Delays action for 2 seconds (2000 milliseconds)
-
-            }
-        });
         btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAction("l");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrowclicked);
-                btnRight.setImageResource(R.drawable.rightarrow);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        btnLeft.setImageResource(R.drawable.leftarrow);
-
-                    }
-                }, 1000); // Delays action for 1 seconds (2000 milliseconds)
-
-
+                pressLeft();
             }
         });
         btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAction("r");
-                btnUp.setImageResource(R.drawable.uparrow);
-                btnDown.setImageResource(R.drawable.downarrow);
-                btnLeft.setImageResource(R.drawable.leftarrow);
-                btnRight.setImageResource(R.drawable.rightarrowclicked);
-                btnStop.setImageResource(R.drawable.stopbutton);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        btnRight.setImageResource(R.drawable.rightarrow);
-
-                    }
-                }, 1000); // Delays action for 1 seconds (1000 milliseconds)
-
-
+                pressRight();
             }
         });
+        btnDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressDown();
+            }
+        });
+        btnUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressUp();
+            }
+        });
+
+        /**
+         * @author: Melinda
+         * @editor: Nina - modified the nested if statement
+         *
+         * Reads input sent from the Arduino, and enters the corresponding if statement.
+         * If there is an obstacle detected, it disables the buttons facing that direction.
+         * If the obstacle moves out of the sensors' sight on its own, the buttons are
+         * enabled again.
+         */
+
+        bluetoothIn = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                //If message is what we want
+                if (msg.what == handlerState) {
+                    //Msg.arg1 = bytes from connect thread
+                    String readMessage = (String) msg.obj;
+                    //Append string
+                    recDataString.append(readMessage);
+
+                    if (recDataString.charAt(0) == 'c') {       //if c is received, there is an obstacle in front
+                        Toast.makeText(getApplicationContext(), "Obstacle is in front", Toast.LENGTH_SHORT).show();
+                        disableKey(btnUp);      //Disabling and changing the colour of the up arrow when there's an obstacle ahead
+
+                    } else if (recDataString.charAt(0) == 't') { //if t is received, there is an obstacle behind
+                        Toast.makeText(getApplicationContext(), "Obstacle is behind", Toast.LENGTH_SHORT).show();
+                        /*Disabling and changing the colour of the down arrow when there's an obstacle behind*/
+                        disableKey(btnDown);
+
+                    } else if (recDataString.charAt(0) == 'x') { //if x is received, there is no obstacle in front
+                        enableKey(btnUp);
+
+                    } else if (recDataString.charAt(0) == 'u') { //if u is received, there is no obstacle behind
+                        enableKey(btnDown);
+
+                    }
+
+                    //clear all string data
+                    recDataString.delete(0, recDataString.length());
+                }
+            }
+        };
+
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -266,6 +217,7 @@ public class ControlActivity extends AppCompatActivity {
                 }, 1000); // Delays action for 1 seconds (1000 milliseconds)
             }
         });
+
         btnBlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,7 +225,11 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
-        btnJoystick.setOnClickListener(new View.OnClickListener() {
+        /*
+         * This button opens the Joystick controls page.
+         */
+
+        /*btnJoystick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ControlActivity.this, JoystickScreen.class);
@@ -282,10 +238,33 @@ public class ControlActivity extends AppCompatActivity {
                 Disconnect();
                 finish();
             }
-        });
+        }); */
+
+        /*
+         * This button opens the tilt controls page.
+         */
+      /*  btnTilt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ControlActivity.this, TiltScreen.class);
+                i.putExtra("ADDRESS", address);
+                startActivity(i);
+                /*
+                 * Force all buffered data to be written out
+                 * before the output stream closes.
+                 */
+              /*  try {
+                    btSocket.getOutputStream().flush();
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Output error.", Toast.LENGTH_SHORT).show();
+                }
+                Disconnect();
+                finish();
+            }
+        }); */
 
 
-        autonomousSwich.setOnClickListener(new View.OnClickListener() {
+        autonomousSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (autonomousOn) {
@@ -313,7 +292,6 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
-
         lightSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -324,9 +302,11 @@ public class ControlActivity extends AppCompatActivity {
                     btnLeft.setVisibility(View.VISIBLE);
                     btnRight.setVisibility(View.VISIBLE);
                     btnStop.setVisibility(View.VISIBLE);
-                    autonomousSwich.setVisibility(View.VISIBLE);
+                    autonomousSwitch.setVisibility(View.VISIBLE);
                     autoText.setVisibility(View.VISIBLE);
-                    setAction("s");
+                    setAction("w");
+
+                    piCamText.setVisibility(View.GONE);
 
                 } else {
                     //TURN it on
@@ -336,10 +316,41 @@ public class ControlActivity extends AppCompatActivity {
                     btnLeft.setVisibility(View.GONE);
                     btnRight.setVisibility(View.GONE);
                     btnStop.setVisibility(View.GONE);
-                    autonomousSwich.setVisibility(View.GONE);
+                    autonomousSwitch.setVisibility(View.GONE);
                     autoText.setVisibility(View.GONE);
-                    setAction("w");
+                    setAction("o");
 
+                    /**
+                     * @author: Nina Uljanic
+                     * SEM V17
+                     * group-9 : MENACE
+                     * 11.05.2017.
+                     *
+                     * Reads input received from the Arduino and pops a toast about the status of
+                     * the camera - whether a red object has been detected or not.
+                     */
+
+                    //Add the picture/text and the toasts: there is an object and there is not
+                    piCamText.setVisibility(View.VISIBLE);
+
+                    //Await data from the car
+                    bluetoothIn = new Handler() {
+                        public void handleMessage(android.os.Message msg) {
+                            if (msg.what == handlerState) { //if message is what we want
+                                String readMessage = (String) msg.obj; // msg.arg1 = bytes from connect thread
+                                recDataString.append(readMessage); //append string
+
+                                if (recDataString.charAt(0) == 'z'){ //if z is received, a red object has been detected
+                                    Toast.makeText(getApplicationContext(), "Red object detected.", Toast.LENGTH_SHORT).show();
+                                }
+
+                                if (recDataString.charAt(0) == 'n'){ //if n is received, no red object has been detected
+                                    Toast.makeText(getApplicationContext(), "No red object detected.", Toast.LENGTH_SHORT).show();
+                                }
+                                recDataString.delete(0, recDataString.length()); //clear all string data
+                            }
+                        }
+                    };
                 }
             }
         });
@@ -357,6 +368,89 @@ public class ControlActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*Handle when left arrow is clicked*/
+    private void pressLeft(){
+        setAction("l");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrowclicked);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnLeft.setImageResource(R.drawable.leftarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (2000 milliseconds)
+    }
+
+    /*Handle when right arrow is clicked*/
+    private void pressRight(){
+        setAction("r");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrowclicked);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                btnRight.setImageResource(R.drawable.rightarrow);
+
+            }
+        }, 1000); // Delays action for 1 seconds (1000 milliseconds)
+    }
+
+    /*Handle when up arrow is clicked*/
+    private void pressUp(){
+        setAction("f");
+        btnUp.setImageResource(R.drawable.uparrowclicked);
+        btnDown.setImageResource(R.drawable.downarrow);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                setAction("q"); // Sends q after 2 seconds to stop car
+                btnUp.setImageResource(R.drawable.uparrow);
+
+            }
+        }, 2000); // Delays action for 2 seconds (2000 milliseconds)
+    }
+
+    /*Handle when down arrow is clicked*/
+    private void pressDown(){
+        setAction("b");
+        btnUp.setImageResource(R.drawable.uparrow);
+        btnDown.setImageResource(R.drawable.downarrowclicked);
+        btnLeft.setImageResource(R.drawable.leftarrow);
+        btnRight.setImageResource(R.drawable.rightarrow);
+        btnStop.setImageResource(R.drawable.stopbutton);
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                setAction("q"); // Sends q after 2 seconds to stop car
+                btnDown.setImageResource(R.drawable.downarrow);
+
+            }
+        }, 2000); // Delays action for 2 seconds (2000 milliseconds)
     }
 
     /*Disconnect (bluetooth socket)*/
@@ -434,6 +528,9 @@ public class ControlActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @author Isak Magnusson
+     */
 
     //create new class for connect thread
     private class ConnectedThread extends Thread {
@@ -459,7 +556,8 @@ public class ControlActivity extends AppCompatActivity {
             // Keep looping to listen for received messages
             while (true) {
                 try {
-                    bytes = mmInStream.read(buffer); //read bytes from input buffer
+                    //Read bytes from input buffer
+                    bytes = mmInStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
                     // Send the obtained bytes to the UI Activity via handler
                     bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
@@ -468,10 +566,41 @@ public class ControlActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    /**
+     * @authod Nina & Melinda
+     *
+     * A method to enable all keys and methods to enable or disable a specific key.
+     */
+
+    public void enableKeys() {
+
+        btnLeft.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnLeft.setEnabled(true);
+
+        btnRight.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnRight.setEnabled(true);
+
+        btnUp.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnUp.setEnabled(true);
+
+        btnDown.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+        btnDown.setEnabled(true);
 
     }
 
+    public void disableKey(ImageButton key){
+        key.setEnabled(false);
+        key.setColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void enableKey(ImageButton key){
+        key.setEnabled(true);
+        key.setColorFilter(0xffffffff, PorterDuff.Mode.MULTIPLY);
+    }
 }
+
 
 
 

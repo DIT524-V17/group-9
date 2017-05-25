@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Car Controller</string>
+    <string name="title_activity_mode_selection">ModeSelection</string>
+    <string name="title_activity_car_control">CarControl</string>
+</resources>

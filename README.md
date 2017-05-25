@@ -1,1 +1,9 @@
-# group-9
+# M.E.N.A.C.E.
+
+Menace project is an embedded system composed by a robot car and a control that receives and send different data in order to execute movement and functions. 
+Menace’s overview were described as the following: 
+One of the project’s main goals was to build a mobile application that is used to control the car. First of all, the application must connects with the car through Bluetooth in order to exchange data. After that, the application directs the user into the manual mode, after he/she is able to change the mode from the manual to the autonomous mode and back.
+Inside the manual mode the user have a control menu which consists of several buttons used to direct the car. The application simultaneously provides feedback received from the car under certain circumstances.
+In the autonomous mode the car follow a “cut grass” scenario where it moves forward and when faces an obstacle in front, then the car will blink the alert signal, stop the car and after turns to the right-side.
+The features that are presented in both modes are that the car senses autonomously obstacles. Thus, avoiding those obstacles are handled differently according to the chosen one. Another feature that has been implemented is blinking lights. The car uses two lights - one on each side - to show the change of direction, i.e. the light on the left side and on the right side will blink when the car is turning to the left and right respectively, and after the turn is completed, the blinking will stop. The lights will also blink when the car faces an obstacle as an alert signal.
+A Raspberry Pi with a camera was incorporated to detect a colored object and inform the user when the detection is achieved.

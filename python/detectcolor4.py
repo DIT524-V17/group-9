@@ -21,13 +21,14 @@ import serial
 import time
 
 # Initializing the variables
+
 x = ' ' 
 ser = serial.Serial('/dev/ttyACM0', 9600) # Kosara's code
 
 # The code must run during the Arduino is on, waiting for a command from the user. 
 while 1:
         
-        x = ser.readline()          # Laiz's code - Check if the car sends a value
+        x = ser.readline()          # Laiz' code - Check if the car sends a value
         print x                           
 
         if x != ' ': 
@@ -35,7 +36,7 @@ while 1:
                 camera = PiCamera()
                 camera.resolution = (100, 100)
                 image = camera.capture('/home/pi/Desktop/image.jpg')
-                camera.close()            # Laiz's code
+                camera.close()            # Laiz' code
                 
                 # Construct the argument parse and parse the arguments
                 ap = argparse.ArgumentParser()
@@ -66,7 +67,8 @@ while 1:
                         accumMask = cv2.bitwise_or(accumMask, mask)
                
 
-                # Show the images               
+                # Show the images
+                # cv2.imshow("images", np.hstack([accumMask]))               
                 unmasked = cv2.countNonZero(accumMask)
 
                 if unmasked:
