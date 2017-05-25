@@ -17,24 +17,25 @@ from time import sleep
 import cv2
 import numpy as np
 import argparse
-import serial                             # Kosara's code
-import time                               # Kosara's code
+import serial
+import time
 
 # Initializing the variables
-x = 'w' # A variable to break the condition
+x = ' ' 
 ser = serial.Serial('/dev/ttyACM0', 9600) # Kosara's code
 
 # The code must run during the Arduino is on, waiting for a command from the user. 
 while 1:
         
-        x = ser.readline()                # Kosara's code
-        print x                           # Kosara's code
+        x = ser.readline()          # Laiz's code - Check if the car sends a value
+        print x                           
 
-        if x != 'w': 
+        if x != ' ': 
                 # Create Camera, set a resolution, save it and close the camera
                 camera = PiCamera()
+                camera.resolution = (100, 100)
                 image = camera.capture('/home/pi/Desktop/image.jpg')
-                camera.close()            # Laiz' code
+                camera.close()            # Laiz's code
                 
                 # Construct the argument parse and parse the arguments
                 ap = argparse.ArgumentParser()
@@ -50,6 +51,7 @@ while 1:
                         # Color range for red       
                         ([17, 15, 100], [50, 56, 200])
                 ]
+                
                 # Loop over the boundaries
                 for (lower, upper) in boundaries:
                         # Create NumPy arrays from the boundaries
@@ -62,19 +64,16 @@ while 1:
                        
                         # Merge the mask into the accumulated masks
                         accumMask = cv2.bitwise_or(accumMask, mask)
-               )
+               
 
-                # Show the images
-                # cv2.imshow("images", np.hstack([accumMask]))               
+                # Show the images               
                 unmasked = cv2.countNonZero(accumMask)
 
                 if unmasked:
                     print "has red"
-                    ser.write('r') # Kosara's code
+                    ser.write('z') # Kosara's code
                 else:
                     print "none"
                     ser.write('n') # Kosara's code
                
-                #sleep(5) - Bug cause - Laiz' task
-                #cv2.waitKey(0) - Bug cause - Laiz' task
                 cv2.destroyAllWindows()
