@@ -28,7 +28,7 @@ ser = serial.Serial('/dev/ttyACM0', 9600) # Kosara's code
 # The code must run during the Arduino is on, waiting for a command from the user. 
 while 1:
         
-        x = ser.readline()          # Laiz' code - Check if the car sends a value
+        x = ser.readline()          # Laiz's code - Check if the car sends a value
         print x                           
 
         if x != ' ': 
@@ -36,7 +36,7 @@ while 1:
                 camera = PiCamera()
                 camera.resolution = (100, 100)
                 image = camera.capture('/home/pi/Desktop/image.jpg')
-                camera.close()            # Laiz' code
+                camera.close()            # Laiz's code
                 
                 # Construct the argument parse and parse the arguments
                 ap = argparse.ArgumentParser()
