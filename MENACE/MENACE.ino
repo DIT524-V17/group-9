@@ -3,7 +3,7 @@
    There are data exchange between the pi and the mobile application (Andriod code).The version described below 
    were not related to sprints, they are related to versions delivered.
     
-   @author - Nina (Version 1), Elham (Version 1), Laiz (Version 1, 2 and 4) and Rema (Version 2, 3 and 4)
+   @author - Nina (Version 1), Elham (Version 1), Laiz (Version 1, 2, 4 and Final) and Rema (Version 2, 3 and 4)
    @editor - Elham and Rema: Bluetooth connection with mobile application 
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
@@ -27,8 +27,8 @@ Car car;
             Pin numbers initialization
   ===============================================
 */
-const int TRIGGER_PIN_F = 51; // <---- the number of the ultrasound sensor pin for the front
-const int ECHO_PIN_F = 50;    // <---- the number of the ultrasound sensor pin for the front
+const int TRIGGER_PIN_F = A15; // <---- the number of the ultrasound sensor pin for the front
+const int ECHO_PIN_F = A14;    // <---- the number of the ultrasound sensor pin for the front
 const int TRIGGER_PIN_B = 45; // <---- the number of the ultrasound sensor pin for the back
 const int ECHO_PIN_B = 44;    // <---- the number of the ultrasound sensor pin for the back
 const int ledRight = 48;      // <---- the number of the LED pin
@@ -98,14 +98,12 @@ void loop() {
       turnRight();
     }
 
-    moveCar(50, 50);        // <-- Car is always moving unless there is an obstacle in front
-    checkSerialInput();     // <-- Check for new input from the bluetooth
+    moveCar();        // <-- Car is always moving unless there is an obstacle in front
 
     /* Enter this section when in manual mode */
   } else {
 
     /* The car proccess the commands from user but stops in case of obstacle */
-
     delay(1000);
     obstacleF();            // <-- Check allways the obstacle in the front
     obstacleB();            // <-- Check allways the obstacle in the back
@@ -208,23 +206,22 @@ void turnLeftM() {
 */
 
 /* Method to make the car move given a speed */
-void moveCar(int tempSpeedL, int tempSpeedR) {
+void moveCar() {
 
-  car.setMotorSpeed(tempSpeedR, tempSpeedL);
+  car.setMotorSpeed(50, 50);
 }
 
 /* Method to make the car stop */
 void stopCar() {
-
+ 
   car.stop();
-  input = 0;      // <-- Dont listen to blutooth input anymore
   delay(100);     // <-- The API documentation requires a 100 ms delay (Thats what I understood :P )
 }
 
 /* Method to make the car go backwards */
-void goBack(int tempSpeedL, int tempSpeedR) {
+void goBack() {
 
-  car.setMotorSpeed(-(tempSpeedR), -(tempSpeedL));  //<-- Just set the speed but in reverse
+  car.setMotorSpeed(-50, -50);  //<-- Just set the speed but in reverse
 }
 /*===============================================
                     OBSTACLES
@@ -274,6 +271,7 @@ boolean obstacleFront() {
 
 /* Checks the back sensor readings for obstacles, blink the light and stop the car */
 boolean obstacleBack() {
+  
   distanceObB = sensorBack.getDistance();
   if (distanceObB > 0 && distanceObB < 30) { // <-- If an obstacle in the back is found perform accordly
     blinkAlert();   // <-- Call the method to make the lights blink
@@ -300,6 +298,7 @@ boolean obstacleBack() {
 
 /* Proccess the input from the bluetooth */
 void goManual() {
+
   /* Condiftions to perform movement in the car based on the user's input in the application */
   if (input == 'q') {       // <-- Check the user command to stop the car
     stopCar();
@@ -307,13 +306,13 @@ void goManual() {
 
   if (input == 'f') {       // <-- Check the user command to drive forwards
     if (canDriveForward) {  // <-- Perform an obstacle check before driving
-      moveCar(50, 50);
+      moveCar();
     }
   }
 
   if (input == 'b') {        // <-- Check the user command to drive backwards
     if (canDriveBackward) {  // <-- Perform an obstacle check before driving
-      goBack(50, 50);
+      goBack();
     }
   }
 
@@ -347,15 +346,16 @@ void modeSelection() {
       break;
 
     case 'o':            // <-- Send 'o' to the Pi to idenfity red object
-      Serial.println("o");  // <-- To send 'o' to the pi
+     val = 1;
+      Serial.println(val);        // <-- To send '1' to the pi
       delay(2000);
-      readSerial();      // <-- To receive the info from the pi
+      readSerial();               // <-- To receive the info from the pi
       delay(1500);
       Serial3.println(piInput);   // <-- To send the info to the app
+      delay(1500);
       break;
 
     case 'w':            // <-- To break the identify red object
-      Serial.println("w"); // <-- To send 'w' to the pi
       break;
 
     default:             // <-- The manual mode is the default mode
