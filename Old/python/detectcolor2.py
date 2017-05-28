@@ -1,3 +1,4 @@
+# @author Syeda Elham Shahed
 import cv2.cv as cv
 import cv2
 import numpy as np
