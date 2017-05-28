@@ -2,7 +2,7 @@
    This sketch was created to be used to connect the car with the Raspberry Pi to identify a red object, initialize the serials attached 
    on the car and bluetooth module. There are data exchange between the pi and the mobile application (Andriod code).
 
-   @author - Laiz
+   @author - Laiz and Elham
    @editor - Elham and Rema: Bluetooth connection with mobile application
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
    @editor - Nina: Serial connection with the pi to send the data when the red object is faced to the App.
