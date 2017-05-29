@@ -41,6 +41,7 @@ const int ledLeft = 49;       // <---- the number of the LED pin
 char input = 0;                     // <---- for the bluetooth connection
 char output = 0;                    // <---- for the bluetooth connection
 char outputN= 0;
+int val = 0;
 char piInput = 0;                   // <---- for the pi connection
 unsigned int tempSpeed = 0;         // <---- for setting the velocity
 int ledStateLeft = LOW;             // <---- led state used to set the LED
