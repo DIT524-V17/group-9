@@ -5,6 +5,7 @@
     
    @author - Nina (Version 1), Elham (Version 1), Laiz (Version 1, 2, 4 and Final) and Rema (Version 2, 3 and 4)
    @editor - Elham and Rema: Bluetooth connection with mobile application 
+   @editor - Elham: fix code for identify red object and fix Serial connection bug 
    @editor - Isak: Serial3 connection with the application when the car faces an obstacle in order to prompt the user for a new command.
    @editor - Kosara: Serial connection with the raspberry pi and the car in order to send and receive data for the Identify red object feature.
    @editor - Nina: Serial connection with the pi to send the data when the red object is faced to the App.
